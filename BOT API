@@ -1,8 +1,8 @@
 to set temporary code use:
-	bot_telegram/Memory_bot.php?email=<user email>&key=<8 char random key>
+	https://vladbogun.store/AVPZ/Memory_bot.php?email=<user email>&key=<8 char random key>
 
 get this code from database and create link for user:
 	https://telegram.me/tut0_bot?start=<8 char key from db>
 
 to notify user:
-	bot_telegram/Notify_bot.php?email=<user email>&message=<message text>[&url=<link to message>]
+	https://vladbogun.store/AVPZ/Notify_bot.php?email=<user email>&message=<message text>[&url=<link to message>]
