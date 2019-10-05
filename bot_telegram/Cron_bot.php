@@ -1,4 +1,5 @@
 <?php
+include "CorsPolicy.php";
 $con = mysqli_connect('mysql.hostinger.com.ua','u747826294_tuto','tutortutor','u747826294_tuto');
 	if(!$con){
 		echo "База данных не работает -> Бот R.I.P.";
