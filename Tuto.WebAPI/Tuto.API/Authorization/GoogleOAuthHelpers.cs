@@ -5,7 +5,7 @@ namespace Tuto.API.Authorization
 {
     public static class GoogleOAuthHelpers
     {
-        private const string OAuthURl = "https://accounts.google.com/o/oauth2/auth?";
+        private const string OAuthURL = "https://accounts.google.com/o/oauth2/auth?";
         private const string OAuthScopes = "https://www.googleapis.com/auth/userinfo.email";
         private static string EncodedScopes { get; } = Uri.EscapeDataString(OAuthScopes);
         private static StringBuilder StringBuilderInstance { get; } = new StringBuilder();
@@ -16,7 +16,7 @@ namespace Tuto.API.Authorization
             var encodedRedirectUrl = Uri.EscapeDataString(redirectUrl);
 
             return StringBuilderInstance.Clear()
-                                        .Append(OAuthURl)
+                                        .Append(OAuthURL)
                                         .Append("client_id=").Append(clientId)
                                         .Append("&redirect_uri=").Append(encodedRedirectUrl)
                                         .Append("&response_type=code")
