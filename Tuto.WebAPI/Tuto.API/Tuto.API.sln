@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.29324.140
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tuto.API", "Tuto.API.csproj", "{184CFEDD-A70D-4C8F-97DC-5709480DEB34}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tuto.Domain", "..\Tuto.Domain\Tuto.Domain.csproj", "{B5B99407-7E7B-45AD-A1D8-B0704243343D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tuto.Services", "..\Tuto.Services\Tuto.Services.csproj", "{802E40E5-624D-4B83-9220-10FDDDDEAB32}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{184CFEDD-A70D-4C8F-97DC-5709480DEB34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{184CFEDD-A70D-4C8F-97DC-5709480DEB34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{184CFEDD-A70D-4C8F-97DC-5709480DEB34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5B99407-7E7B-45AD-A1D8-B0704243343D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5B99407-7E7B-45AD-A1D8-B0704243343D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5B99407-7E7B-45AD-A1D8-B0704243343D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5B99407-7E7B-45AD-A1D8-B0704243343D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{802E40E5-624D-4B83-9220-10FDDDDEAB32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{802E40E5-624D-4B83-9220-10FDDDDEAB32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{802E40E5-624D-4B83-9220-10FDDDDEAB32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{802E40E5-624D-4B83-9220-10FDDDDEAB32}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
