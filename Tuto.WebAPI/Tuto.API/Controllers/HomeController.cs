@@ -7,7 +7,7 @@ namespace Tuto.API.Controllers
     {
         [HttpGet]
         [Route("home/index")]
-        [AuthFilter(AuthRole.Admin)]
+        [AuthFilter(AuthRoles.Admin)]
         public IActionResult Index()
         {
             return Content("123");
