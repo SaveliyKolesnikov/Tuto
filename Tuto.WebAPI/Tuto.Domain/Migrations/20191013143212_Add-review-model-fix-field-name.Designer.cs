@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tuto.Domain;
 
 namespace Tuto.Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191013143212_Add-review-model-fix-field-name")]
+    partial class Addreviewmodelfixfieldname
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,28 +63,6 @@ namespace Tuto.Domain.Migrations
                     b.HasIndex("TeacherId");
 
                     b.ToTable("Lessons");
-                });
-
-            modelBuilder.Entity("Tuto.Domain.Models.Review", b =>
-                {
-                    b.Property<Guid>("ReviewId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<Guid>("CreatorId");
-
-                    b.Property<Guid>("ForWhomId");
-
-                    b.Property<int>("Mark");
-
-                    b.Property<string>("Message");
-
-                    b.HasKey("ReviewId");
-
-                    b.HasIndex("CreatorId");
-
-                    b.HasIndex("ForWhomId");
-
-                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Tuto.Domain.Models.Role", b =>
@@ -155,19 +135,6 @@ namespace Tuto.Domain.Migrations
                     b.HasOne("Tuto.Domain.Models.User", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Tuto.Domain.Models.Review", b =>
-                {
-                    b.HasOne("Tuto.Domain.Models.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Tuto.Domain.Models.User", "ForWhom")
-                        .WithMany()
-                        .HasForeignKey("ForWhomId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

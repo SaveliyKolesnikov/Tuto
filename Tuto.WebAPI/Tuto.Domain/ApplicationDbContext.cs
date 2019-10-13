@@ -9,7 +9,8 @@ namespace Tuto.Domain
         public DbSet<Role> Roles { get; set; }
         public DbSet<TeacherInfo> TeacherInfos { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
-        public DbSet<Lesson> Lessons{ get; set; }
+        public DbSet<Lesson> Lessons { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

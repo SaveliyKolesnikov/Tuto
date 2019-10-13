@@ -81,6 +81,7 @@ namespace Tuto.API
             builder.EntitySet<TeacherInfo>("TeacherInfos");
             builder.EntitySet<Lesson>("Lessons");
             builder.EntitySet<ChatMessage>("ChatMessages");
+            builder.EntitySet<Review>("Reviews");
             return builder.GetEdmModel();
         }
     }
