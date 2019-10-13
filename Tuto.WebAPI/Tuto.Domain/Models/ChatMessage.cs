@@ -1,11 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Tuto.Domain.Models.Interfaces;
 
 namespace Tuto.Domain.Models
 {
-    public class ChatMessage
+    public class ChatMessage : IODataEntity
     {
-        public Guid ChatMessageId { get; set; }
+        public Guid Id { get; set; }
         public DateTime SendTime { get; set; }
         public Guid SenderId { get; set; }
         public Guid RecipientId { get; set; }

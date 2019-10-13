@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+using Tuto.Domain.Models.Interfaces;
 
 namespace Tuto.Domain.Models
 {
-    public class Lesson
+    public class Lesson : IODataEntity
     {
-        public Guid LessonId { get; set; }
+        public Guid Id { get; set; }
         public Guid TeacherId { get; set; }
         public Guid StudentId { get; set; }
         public DateTime LessonTime { get; set; }

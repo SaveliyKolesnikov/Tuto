@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+using Tuto.Domain.Models.Interfaces;
 
 namespace Tuto.Domain.Models
 {
-    public class Review
+    public class Review : IODataEntity
     {
-        public Guid ReviewId { get; set; }
+        public Guid Id { get; set; }
         [Range(0, 5)]
         public int Mark { get; set; }
         public string Message { get; set; }
