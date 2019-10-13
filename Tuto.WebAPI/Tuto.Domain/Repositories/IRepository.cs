@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 
 namespace Tuto.Domain.Repositories
 {
@@ -8,5 +9,6 @@ namespace Tuto.Domain.Repositories
         IQueryable<TEntity> Read();
         void Delete(TEntity entity);
         void Update(TEntity newEntity);
+        Task Commit();
     }
 }

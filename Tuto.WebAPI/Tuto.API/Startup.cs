@@ -1,9 +1,12 @@
+using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Edm;
 using Tuto.API.Authorization;
 using Tuto.API.Configuration;
 using Tuto.Domain;
@@ -31,11 +34,22 @@ namespace Tuto.API
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.Configure<OAuthConfig>(Configuration.GetSection("GoogleOAuthService"));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddOData();
+
+            services.AddMvc(options =>
+            {
+                options.EnableEndpointRouting = false;
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
             services.AddHttpClient();
+
             services.AddTransient<IRepository<Role>, GenericRepository<Role>>();
             services.AddTransient<IRepository<User>, GenericRepository<User>>();
+            services.AddTransient<IRepository<TeacherInfo>, GenericRepository<TeacherInfo>>();
+            services.AddTransient<IRepository<Lesson>, GenericRepository<Lesson>>();
+            services.AddTransient<IRepository<ChatMessage>, GenericRepository<ChatMessage>>();
             services.AddTransient<IGoogleOAuthService, GoogleOAuthService>();
+
             services.AddSingleton<ISessionStorage<AppUser>, SessionMemoryStorage<AppUser>>();
         }
 
@@ -55,7 +69,19 @@ namespace Tuto.API
                 routes.MapRoute(
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
+                routes.Select().Expand().Filter().OrderBy().MaxTop(100).Count();
+                routes.MapODataServiceRoute("odata", "odata", GetEdmModel());
             });
+        }
+
+        private static IEdmModel GetEdmModel()
+        {
+            var builder = new ODataConventionModelBuilder();
+            builder.EntitySet<User>("Users");
+            builder.EntitySet<TeacherInfo>("TeacherInfos");
+            builder.EntitySet<Lesson>("Lessons");
+            builder.EntitySet<ChatMessage>("ChatMessages");
+            return builder.GetEdmModel();
         }
     }
 }
