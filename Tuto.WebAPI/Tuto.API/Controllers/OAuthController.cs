@@ -12,7 +12,7 @@ using Tuto.Domain.Authorization;
 
 namespace Tuto.API.Controllers
 {
-    public class OAuthController : Controller
+    public class OAuthController : ControllerBase
     {
         private readonly ISessionStorage<AppUser> _storage;
         private readonly OAuthConfig _oAuthConfig;
