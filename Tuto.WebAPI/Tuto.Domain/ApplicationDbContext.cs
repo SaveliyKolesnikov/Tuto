@@ -15,5 +15,16 @@ namespace Tuto.Domain
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<User>().Property(x => x.UserId).HasDefaultValueSql("NEWID()");
+            modelBuilder.Entity<Role>().Property(x => x.RoleId).HasDefaultValueSql("NEWID()");
+            modelBuilder.Entity<TeacherInfo>().Property(x => x.TeacherInfoId).HasDefaultValueSql("NEWID()");
+            modelBuilder.Entity<ChatMessage>().Property(x => x.ChatMessageId).HasDefaultValueSql("NEWID()");
+            modelBuilder.Entity<Lesson>().Property(x => x.LessonId).HasDefaultValueSql("NEWID()");
+            modelBuilder.Entity<Review>().Property(x => x.ReviewId).HasDefaultValueSql("NEWID()");
+        }
     }
 }
