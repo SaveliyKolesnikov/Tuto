@@ -11,6 +11,8 @@ namespace Tuto.Domain.Models
 
         public string Email { get; set; }
 
+        public TeacherInfo TeacherInfo { get; set; }
+
         public ICollection<Role> Roles { get; set; }
     }
 }
