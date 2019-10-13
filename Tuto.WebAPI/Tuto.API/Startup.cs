@@ -48,6 +48,7 @@ namespace Tuto.API
             services.AddTransient<IRepository<TeacherInfo>, GenericRepository<TeacherInfo>>();
             services.AddTransient<IRepository<Lesson>, GenericRepository<Lesson>>();
             services.AddTransient<IRepository<ChatMessage>, GenericRepository<ChatMessage>>();
+            services.AddTransient<IRepository<Review>, GenericRepository<Review>>();
             services.AddTransient<IGoogleOAuthService, GoogleOAuthService>();
 
             services.AddSingleton<ISessionStorage<AppUser>, SessionMemoryStorage<AppUser>>();
