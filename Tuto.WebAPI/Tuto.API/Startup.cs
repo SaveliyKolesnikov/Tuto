@@ -32,7 +32,7 @@ namespace Tuto.API
         {
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), opts => opts.UseNetTopologySuite()));
             services.Configure<OAuthConfig>(Configuration.GetSection("GoogleOAuthService"));
             services.AddOData();
 
@@ -49,6 +49,10 @@ namespace Tuto.API
             services.AddTransient<IRepository<Lesson>, GenericRepository<Lesson>>();
             services.AddTransient<IRepository<ChatMessage>, GenericRepository<ChatMessage>>();
             services.AddTransient<IRepository<Review>, GenericRepository<Review>>();
+            services.AddTransient<IRepository<Region>, GenericRepository<Region>>();
+            services.AddTransient<IRepository<City>, GenericRepository<City>>();
+            services.AddTransient<IRepository<Subject>, GenericRepository<Subject>>();
+            services.AddTransient<IRepository<TeacherSubject>, GenericRepository<TeacherSubject>>();
             services.AddTransient<IGoogleOAuthService, GoogleOAuthService>();
 
             services.AddSingleton<ISessionStorage<AppUser>, SessionMemoryStorage<AppUser>>();
@@ -83,6 +87,10 @@ namespace Tuto.API
             builder.EntitySet<Lesson>("Lessons");
             builder.EntitySet<ChatMessage>("ChatMessages");
             builder.EntitySet<Review>("Reviews");
+            builder.EntitySet<Region>("Regions");
+            builder.EntitySet<City>("Cities");
+            builder.EntitySet<Subject>("Subjects");
+            builder.EntitySet<TeacherSubject>("TeacherSubjects");
             return builder.GetEdmModel();
         }
     }
