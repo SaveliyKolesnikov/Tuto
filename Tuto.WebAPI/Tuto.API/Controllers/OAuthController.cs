@@ -9,6 +9,8 @@ using Tuto.API.Configuration;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Tuto.Domain.Authorization;
+using AutoMapper;
+using System.Collections.Generic;
 
 namespace Tuto.API.Controllers
 {
@@ -18,15 +20,18 @@ namespace Tuto.API.Controllers
         private readonly OAuthConfig _oAuthConfig;
         private readonly IRepository<User> _usersRepository;
         private readonly IGoogleOAuthService _googleOAuthService;
+        private readonly IMapper _mapper;
 
         public OAuthController(ISessionStorage<AppUser> storage, 
             IRepository<User> repository, 
             IGoogleOAuthService googleOAuthService,
-            IOptions<OAuthConfig> appSettings)
+            IOptions<OAuthConfig> appSettings,
+            IMapper mapper)
         {
             _storage = storage;
             _usersRepository = repository;
             _googleOAuthService = googleOAuthService;
+            _mapper = mapper;
             _oAuthConfig = appSettings.Value;
         }
 
@@ -47,22 +52,30 @@ namespace Tuto.API.Controllers
                     var ip = HttpContext.Connection.RemoteIpAddress.ToString();
                     var sessionId = Guid.NewGuid();
 
-                    var user = await _usersRepository.Read().Include(u => u.Roles).FirstOrDefaultAsync(u => u.Email.Equals(userInfo.Email));
-                    if (user != null)
-                    {
-                        var roles = user.Roles.Select(x => x.Name).ToHashSet();
-                        var creatingTime = DateTime.UtcNow;
-                        var appUser = new AppUser(roles, ip, user,creatingTime);
-                        HttpContext.User = appUser;
-                        _storage.Set(sessionId, appUser);
-                        HttpContext.Response.Cookies.Append("sessionId", sessionId.ToString());
+                    var user = await _usersRepository.Read().Include(u => u.Roles)
+                        .FirstOrDefaultAsync(u => u.Email.Equals(userInfo.Email)) ?? await RegisterUserAsync(userInfo);
 
-                        return Redirect(string.IsNullOrEmpty(returnUrl) ? "/Home/Index" : returnUrl);
-                    }
+                    var roles = user.Roles?.Select(x => x.Name).ToHashSet() ?? Enumerable.Empty<string>().ToHashSet();
+                    var creatingTime = DateTime.UtcNow;
+                    var appUser = new AppUser(roles, ip, user, creatingTime);
+                    HttpContext.User = appUser;
+                    _storage.Set(sessionId, appUser);
+                    HttpContext.Response.Cookies.Append("sessionId", sessionId.ToString());
+
+                    return Redirect(string.IsNullOrEmpty(returnUrl) ? "/Home/Index" : returnUrl);
                 }
             }
 
             return new StatusCodeResult(403);
+        }
+
+        private async Task<User> RegisterUserAsync(UserInfo userInfo)
+        {
+            var user = _mapper.Map<UserInfo, User>(userInfo);
+            user.Roles = Array.Empty<Role>();
+            _usersRepository.Create(user);
+            await _usersRepository.Commit();
+            return user;
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Tuto.API.Authorization
     public static class GoogleOAuthHelpers
     {
         private const string OAuthURL = "https://accounts.google.com/o/oauth2/auth?";
-        private const string OAuthScopes = "https://www.googleapis.com/auth/userinfo.email";
+        private const string OAuthScopes = "https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email";
         private static string EncodedScopes { get; } = Uri.EscapeDataString(OAuthScopes);
         private static StringBuilder StringBuilderInstance { get; } = new StringBuilder();
 
