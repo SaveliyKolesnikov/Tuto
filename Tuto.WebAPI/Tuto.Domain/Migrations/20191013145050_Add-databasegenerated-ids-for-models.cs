@@ -58,43 +58,6 @@ namespace Tuto.Domain.Migrations
                 defaultValueSql: "NEWID()",
                 oldClrType: typeof(Guid));
 
-            migrationBuilder.CreateTable(
-                name: "Reviews",
-                columns: table => new
-                {
-                    ReviewId = table.Column<Guid>(nullable: false, defaultValueSql: "NEWID()"),
-                    Mark = table.Column<int>(nullable: false),
-                    Message = table.Column<string>(nullable: true),
-                    CreatorId = table.Column<Guid>(nullable: false),
-                    ForWhomId = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Reviews", x => x.ReviewId);
-                    table.ForeignKey(
-                        name: "FK_Reviews_Users_CreatorId",
-                        column: x => x.CreatorId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Reviews_Users_ForWhomId",
-                        column: x => x.ForWhomId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reviews_CreatorId",
-                table: "Reviews",
-                column: "CreatorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reviews_ForWhomId",
-                table: "Reviews",
-                column: "ForWhomId");
-
             migrationBuilder.AddForeignKey(
                 name: "FK_ChatMessages_Users_RecipientId",
                 table: "ChatMessages",

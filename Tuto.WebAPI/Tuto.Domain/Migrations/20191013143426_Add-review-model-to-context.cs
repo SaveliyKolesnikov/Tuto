@@ -27,7 +27,7 @@ namespace Tuto.Domain.Migrations
                 name: "Reviews",
                 columns: table => new
                 {
-                    ReviewId = table.Column<Guid>(nullable: false),
+                    ReviewId = table.Column<Guid>(nullable: false, defaultValueSql: "NEWID()"),
                     Mark = table.Column<int>(nullable: false),
                     Message = table.Column<string>(nullable: true),
                     CreatorId = table.Column<Guid>(nullable: false),
