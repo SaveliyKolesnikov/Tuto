@@ -23,16 +23,16 @@ namespace Tuto.Domain
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<User>().Property(x => x.UserId).HasDefaultValueSql("NEWID()");
-            modelBuilder.Entity<Role>().Property(x => x.RoleId).HasDefaultValueSql("NEWID()");
-            modelBuilder.Entity<TeacherInfo>().Property(x => x.Id).HasDefaultValueSql("NEWID()");
-            modelBuilder.Entity<ChatMessage>().Property(x => x.Id).HasDefaultValueSql("NEWID()");
-            modelBuilder.Entity<Lesson>().Property(x => x.Id).HasDefaultValueSql("NEWID()");
-            modelBuilder.Entity<Review>().Property(x => x.Id).HasDefaultValueSql("NEWID()");
-            modelBuilder.Entity<Region>().Property(x => x.Id).HasDefaultValueSql("NEWID()");
-            modelBuilder.Entity<City>().Property(x => x.Id).HasDefaultValueSql("NEWID()");
-            modelBuilder.Entity<Subject>().Property(x => x.Id).HasDefaultValueSql("NEWID()");
-            modelBuilder.Entity<TeacherSubject>().Property(x => x.Id).HasDefaultValueSql("NEWID()");
+            modelBuilder.Entity<User>().Property(x => x.UserId).HasDefaultValueSql("NEWSEQUENTIALID()");
+            modelBuilder.Entity<Role>().Property(x => x.RoleId).HasDefaultValueSql("NEWSEQUENTIALID()");
+            modelBuilder.Entity<TeacherInfo>().Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            modelBuilder.Entity<ChatMessage>().Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            modelBuilder.Entity<Lesson>().Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            modelBuilder.Entity<Review>().Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            modelBuilder.Entity<Region>().Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            modelBuilder.Entity<City>().Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            modelBuilder.Entity<Subject>().Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            modelBuilder.Entity<TeacherSubject>().Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
         }
     }
 }
