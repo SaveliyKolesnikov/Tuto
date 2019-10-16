@@ -3,7 +3,7 @@ using Tuto.API.Authorization;
 
 namespace Tuto.API.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : ControllerBase
     {
         [HttpGet]
         [Route("home/index")]

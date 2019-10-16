@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text.Json;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Tuto.Domain.Authorization;
 using Tuto.Services.Interfaces;
@@ -36,7 +36,7 @@ namespace Tuto.Services
                 return null;
             }
 
-            var token = await JsonSerializer.DeserializeAsync<Token>(await response.Content.ReadAsStreamAsync());
+            var token = JsonConvert.DeserializeObject<Token>(await response.Content.ReadAsStringAsync());
 
             return token?.access_token;
         }
@@ -44,7 +44,7 @@ namespace Tuto.Services
         public async Task<UserInfo> GetUserAsync(string accessToken)
         {
             var userInfoResponse = await GetUserInfoResponseAsync(accessToken);
-            return await JsonSerializer.DeserializeAsync<UserInfo>(await userInfoResponse.Content.ReadAsStreamAsync());
+            return JsonConvert.DeserializeObject<UserInfo>(await userInfoResponse.Content.ReadAsStringAsync());
         }
 
         private Task<HttpResponseMessage> GetUserInfoResponseAsync(string accessToken)

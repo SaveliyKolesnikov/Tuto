@@ -16,7 +16,7 @@ namespace Tuto.Domain
                 .SetBasePath(basePath).AddJsonFile("appsettings.json").Build();
             var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
             var connectionString = configuration.GetConnectionString("DefaultConnection");
-            builder.UseSqlServer(connectionString);
+            builder.UseSqlServer(connectionString, x => x.UseNetTopologySuite());
             return new ApplicationDbContext(builder.Options);
         }
     }

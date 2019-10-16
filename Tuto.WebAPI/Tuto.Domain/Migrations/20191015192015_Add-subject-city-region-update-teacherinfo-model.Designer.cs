@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Tuto.Domain;
@@ -10,9 +11,10 @@ using Tuto.Domain;
 namespace Tuto.Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191015192015_Add-subject-city-region-update-teacherinfo-model")]
+    partial class Addsubjectcityregionupdateteacherinfomodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,7 +26,7 @@ namespace Tuto.Domain.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<Guid>("RecipientId");
 
@@ -47,7 +49,7 @@ namespace Tuto.Domain.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<Point>("Location");
 
@@ -57,8 +59,6 @@ namespace Tuto.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RegionId");
-
                     b.ToTable("Cities");
                 });
 
@@ -66,7 +66,7 @@ namespace Tuto.Domain.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<DateTime>("LessonTime");
 
@@ -93,7 +93,7 @@ namespace Tuto.Domain.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("Name");
 
@@ -106,7 +106,7 @@ namespace Tuto.Domain.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<Guid>("CreatorId");
 
@@ -129,7 +129,7 @@ namespace Tuto.Domain.Migrations
                 {
                     b.Property<Guid>("RoleId")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("Name");
 
@@ -146,7 +146,7 @@ namespace Tuto.Domain.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("Name");
 
@@ -159,7 +159,7 @@ namespace Tuto.Domain.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<int>("MinimumWage");
 
@@ -168,6 +168,8 @@ namespace Tuto.Domain.Migrations
                     b.Property<Guid>("UserId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SubjectId");
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -179,13 +181,13 @@ namespace Tuto.Domain.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasDefaultValueSql("NEWID()");
 
-                    b.Property<Guid>("TeacherInfoId");
+                    b.Property<Guid>("TeacherId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TeacherInfoId");
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("TeacherSubjects");
                 });
@@ -194,7 +196,7 @@ namespace Tuto.Domain.Migrations
                 {
                     b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<Guid>("CityId");
 
@@ -227,14 +229,6 @@ namespace Tuto.Domain.Migrations
                     b.HasOne("Tuto.Domain.Models.User", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Tuto.Domain.Models.City", b =>
-                {
-                    b.HasOne("Tuto.Domain.Models.Region")
-                        .WithMany("Cities")
-                        .HasForeignKey("RegionId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -278,6 +272,11 @@ namespace Tuto.Domain.Migrations
 
             modelBuilder.Entity("Tuto.Domain.Models.TeacherInfo", b =>
                 {
+                    b.HasOne("Tuto.Domain.Models.Subject", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Tuto.Domain.Models.User", "User")
                         .WithOne("TeacherInfo")
                         .HasForeignKey("Tuto.Domain.Models.TeacherInfo", "UserId")
@@ -286,9 +285,9 @@ namespace Tuto.Domain.Migrations
 
             modelBuilder.Entity("Tuto.Domain.Models.TeacherSubject", b =>
                 {
-                    b.HasOne("Tuto.Domain.Models.TeacherInfo", "TeacherInfo")
-                        .WithMany("TeacherSubjects")
-                        .HasForeignKey("TeacherInfoId")
+                    b.HasOne("Tuto.Domain.Models.User", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -27,11 +27,11 @@ namespace Tuto.API.Authorization
             }
             else
             {
-                RedirectToOAuthSerivce(context);
+                RedirectToOAuthService(context);
             }
         }
 
-        private static void RedirectToOAuthSerivce(AuthorizationFilterContext context)
+        private static void RedirectToOAuthService(AuthorizationFilterContext context)
         {
             var config = (IOptions<OAuthConfig>)context.HttpContext.RequestServices.GetService(typeof(IOptions<OAuthConfig>));
             var fullHostName = $"{context.HttpContext.Request.Scheme}://{context.HttpContext.Request.Host.Value}";

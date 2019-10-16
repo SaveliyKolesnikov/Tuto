@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Tuto.Domain;
@@ -10,9 +11,10 @@ using Tuto.Domain;
 namespace Tuto.Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191015192722_add-icollection-properties-for-teacheinfo-and-region")]
+    partial class addicollectionpropertiesforteacheinfoandregion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,7 +26,7 @@ namespace Tuto.Domain.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<Guid>("RecipientId");
 
@@ -47,7 +49,7 @@ namespace Tuto.Domain.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<Point>("Location");
 
@@ -66,7 +68,7 @@ namespace Tuto.Domain.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<DateTime>("LessonTime");
 
@@ -93,7 +95,7 @@ namespace Tuto.Domain.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("Name");
 
@@ -106,7 +108,7 @@ namespace Tuto.Domain.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<Guid>("CreatorId");
 
@@ -129,7 +131,7 @@ namespace Tuto.Domain.Migrations
                 {
                     b.Property<Guid>("RoleId")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("Name");
 
@@ -146,7 +148,7 @@ namespace Tuto.Domain.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("Name");
 
@@ -159,7 +161,7 @@ namespace Tuto.Domain.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<int>("MinimumWage");
 
@@ -179,7 +181,7 @@ namespace Tuto.Domain.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<Guid>("TeacherInfoId");
 
@@ -194,7 +196,7 @@ namespace Tuto.Domain.Migrations
                 {
                     b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<Guid>("CityId");
 
