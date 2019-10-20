@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Tuto.Domain.Authorization;
 using AutoMapper;
-using System.Collections.Generic;
+using Tuto.API.Authorization;
 
 namespace Tuto.API.Controllers
 {
@@ -20,19 +20,62 @@ namespace Tuto.API.Controllers
         private readonly OAuthConfig _oAuthConfig;
         private readonly IRepository<User> _usersRepository;
         private readonly IGoogleOAuthService _googleOAuthService;
+        private readonly IAppUserManager _appUserManager;
         private readonly IMapper _mapper;
 
-        public OAuthController(ISessionStorage<AppUser> storage, 
-            IRepository<User> repository, 
+        public OAuthController(ISessionStorage<AppUser> storage,
+            IRepository<User> repository,
             IGoogleOAuthService googleOAuthService,
             IOptions<OAuthConfig> appSettings,
+            IAppUserManager appUserManager,
             IMapper mapper)
         {
             _storage = storage;
             _usersRepository = repository;
             _googleOAuthService = googleOAuthService;
+            _appUserManager = appUserManager;
             _mapper = mapper;
             _oAuthConfig = appSettings.Value;
+        }
+
+        [AuthFilter]
+        [HttpGet]
+        [Route("OAuth/GetCurrentUserId")]
+        public Guid? GetCurrentUserIdAsync()
+        {
+            if (_appUserManager.TryGetUserId(Request.HttpContext.User, out var userId))
+            {
+                return userId;
+            }
+
+            return null;
+        }
+
+        [HttpPost]
+        [Route("OAuth/LogOut")]
+        public IActionResult LogOut()
+        {
+            var cookie = Request.HttpContext.Request.Cookies["sessionId"];
+
+            if (!string.IsNullOrEmpty(cookie))
+            {
+                var sessionId = Guid.Parse(cookie);
+                if (_storage.TryRemove(sessionId))
+                {
+                    return Ok();
+                }
+            }
+
+            return BadRequest();
+        }
+
+        [HttpGet]
+        [Route("OAuth/Authorize")]
+        public IActionResult Authorize([FromQuery] string returnUrl)
+        {
+            var fullHostName = $"{Request.HttpContext.Request.Scheme}://{Request.HttpContext.Request.Host.Value}";
+            var authorizationUrl = GoogleOAuthHelpers.GetAuthorizationUrl(returnUrl, $"{fullHostName}/OAuth", _oAuthConfig.ClientId);
+            return Redirect(authorizationUrl);
         }
 
         [HttpGet]

@@ -11,16 +11,20 @@ namespace Tuto.API.Authorization
     {
         private readonly string _role;
 
+        public AuthFilter() : this(string.Empty)
+        {
+        }
+
         public AuthFilter(string role)
         {
             _role = role;
         }
-        
+
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             if (context.HttpContext.User is AppUser)
             {
-                if (!context.HttpContext.User.IsInRole(_role))
+                if (!string.IsNullOrEmpty(_role) && !context.HttpContext.User.IsInRole(_role))
                 {
                     context.Result = new StatusCodeResult(403);
                 }

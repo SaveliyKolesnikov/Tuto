@@ -7,5 +7,7 @@ namespace Tuto.Services.Interfaces
         T Get(Guid sessionId);
 
         void Set(Guid sessionId, T value);
+
+        bool TryRemove(Guid sessionId);
     }
 }

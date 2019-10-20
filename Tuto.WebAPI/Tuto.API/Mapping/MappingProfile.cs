@@ -2,7 +2,7 @@
 using Tuto.Domain.Authorization;
 using Tuto.Domain.Models;
 
-namespace Tuto.API.Mapping.MappingExtensions
+namespace Tuto.API.Mapping
 {
     public class MappingProfile : Profile
     {
