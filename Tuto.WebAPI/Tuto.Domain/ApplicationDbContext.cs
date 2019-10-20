@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using Tuto.Domain.Models;
 
 namespace Tuto.Domain
@@ -24,6 +25,7 @@ namespace Tuto.Domain
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<User>().Property(x => x.UserId).HasDefaultValueSql("NEWSEQUENTIALID()");
+            modelBuilder.Entity<User>().Property(x => x.Picture).HasConversion(v => v.ToString(), v => new Uri(v));
             modelBuilder.Entity<Role>().Property(x => x.RoleId).HasDefaultValueSql("NEWSEQUENTIALID()");
             modelBuilder.Entity<TeacherInfo>().Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
             modelBuilder.Entity<ChatMessage>().Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");

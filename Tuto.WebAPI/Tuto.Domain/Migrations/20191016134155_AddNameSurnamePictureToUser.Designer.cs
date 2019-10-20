@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Tuto.Domain;
@@ -10,9 +11,10 @@ using Tuto.Domain;
 namespace Tuto.Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191016134155_AddNameSurnamePictureToUser")]
+    partial class AddNameSurnamePictureToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -196,7 +198,7 @@ namespace Tuto.Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<Guid?>("CityId");
+                    b.Property<Guid>("CityId");
 
                     b.Property<string>("Description");
 
@@ -208,7 +210,7 @@ namespace Tuto.Domain.Migrations
 
                     b.Property<string>("Picture");
 
-                    b.Property<Guid?>("RegionId");
+                    b.Property<Guid>("RegionId");
 
                     b.Property<string>("Surname");
 
@@ -300,11 +302,13 @@ namespace Tuto.Domain.Migrations
                 {
                     b.HasOne("Tuto.Domain.Models.City", "City")
                         .WithMany()
-                        .HasForeignKey("CityId");
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Tuto.Domain.Models.Region", "Region")
                         .WithMany()
-                        .HasForeignKey("RegionId");
+                        .HasForeignKey("RegionId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

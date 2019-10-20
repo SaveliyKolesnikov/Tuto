@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
 using Tuto.API.Authorization;
 using Tuto.API.Configuration;
+using Tuto.API.Mapping.MappingExtensions;
 using Tuto.Domain;
 using Tuto.Domain.Authorization;
 using Tuto.Domain.Models;
@@ -42,6 +43,7 @@ namespace Tuto.API
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddHttpClient();
+            services.AddMapper();
 
             services.AddTransient<IRepository<Role>, GenericRepository<Role>>();
             services.AddTransient<IRepository<User>, GenericRepository<User>>();
@@ -54,6 +56,7 @@ namespace Tuto.API
             services.AddTransient<IRepository<Subject>, GenericRepository<Subject>>();
             services.AddTransient<IRepository<TeacherSubject>, GenericRepository<TeacherSubject>>();
             services.AddTransient<IGoogleOAuthService, GoogleOAuthService>();
+            services.AddTransient<IAppUserManager, AppUserManager>();
 
             services.AddSingleton<ISessionStorage<AppUser>, SessionMemoryStorage<AppUser>>();
         }
