@@ -80,6 +80,8 @@ namespace Tuto.API
                 routes.Select().Expand().Filter().OrderBy().MaxTop(100).Count();
                 routes.MapODataServiceRoute("odata", "odata", GetEdmModel());
             });
+
+            app.UseCors(p => p.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowAnyOrigin());
         }
 
         private static IEdmModel GetEdmModel()

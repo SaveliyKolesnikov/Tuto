@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Tuto.Domain;
@@ -10,9 +11,10 @@ using Tuto.Domain;
 namespace Tuto.Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191021173609_add-preferred-days-of-week-for-teacher")]
+    partial class addpreferreddaysofweekforteacher
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -161,9 +163,11 @@ namespace Tuto.Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<double>("MinimumWage");
+                    b.Property<int>("MinimumWage");
 
                     b.Property<int?>("PreferredDaysOfWeek");
+
+                    b.Property<Guid>("SubjectId");
 
                     b.Property<Guid>("UserId");
 
@@ -291,7 +295,7 @@ namespace Tuto.Domain.Migrations
             modelBuilder.Entity("Tuto.Domain.Models.TeacherSubject", b =>
                 {
                     b.HasOne("Tuto.Domain.Models.TeacherInfo", "TeacherInfo")
-                        .WithMany()
+                        .WithMany("TeacherSubjects")
                         .HasForeignKey("TeacherInfoId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
