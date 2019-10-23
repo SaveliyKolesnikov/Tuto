@@ -8,13 +8,13 @@ namespace Tuto.Domain.Models
     [Flags]
     public enum WeekDays
     {
-        Monday = 2,
-        Tuesday = 4,
-        Wednesday = 8,
-        Thursday = 16,
-        Friday = 32,
-        Sunday = 64,
-        Saturday = 128,
+        Monday = 0b_0000_0001,
+        Tuesday = 0b_0000_0010,
+        Wednesday = 0b_0000_0100,
+        Thursday = 0b_0000_1000,
+        Friday = 0b_0001_0000,
+        Sunday = 0b_0010_0000,
+        Saturday = 0b_0100_0000,
     }
     public class TeacherInfo : IODataEntity
     {
