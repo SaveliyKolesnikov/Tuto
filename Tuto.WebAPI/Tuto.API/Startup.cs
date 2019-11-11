@@ -68,7 +68,7 @@ namespace Tuto.API
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseMiddleware<AuthMiddleware>();
 

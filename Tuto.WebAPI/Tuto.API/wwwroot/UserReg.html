@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+  <title>Step one</title>
+  <link rel="stylesheet" href="css/normalize.css" />
+
+  <link rel="stylesheet" href="font/stylesheet.css" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/css/selectize.default.css" />
+
+  <link rel="stylesheet" href="css/style.css" />
+
+  <script src="https://kit.fontawesome.com/805074c2dd.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/js/standalone/selectize.min.js"></script>
+
+
+  <div>
+   <a href="#" class="logo"></a>
+   <h4>
+    <a href="#" class="logo">Tuto</a>
+  </h4>
+</div>
+<form onsubmit="sendForm_User();" action="profile-student.html" lass="form-register">
+  <input type="hidden" name="Id" id="IdUser" class="input-register" />
+  <div class="steps">
+    <p class="text-small">You always can change this information</p>
+    <p class="text-medium text-bold">Only 2 steps to start</p>
+    <div class="wrap-step">
+     <span class="step finish active"></span>
+     <span class="step"></span>
+   </div>
+   <label for="" class="text-small text-bold">What is your name?</label>
+   <div class="input_container">
+     <i class="far fa-user input-icon"></i>
+     <input type="text" id="Name" placeholder="Name" class="input-register" />
+
+   </div>
+   <label for="" class="text-small text-bold">What location do you prefer?</label>
+   <div class="place_input">
+     <label class="container">Student`s home
+      <input type="checkbox" id="student-home" checked="checked" />
+
+      <span class="checkmark"></span>
+    </label>
+    <label class="container">Tutor`s home
+      <input type="checkbox" id="tutor-home" />
+
+      <span class="checkmark"></span>
+    </label>
+    <label class="container">Another location
+      <input type="checkbox" id="another-location" />
+
+      <span class="checkmark"></span>
+    </label>
+  </div>
+  <label for="" class="text-small text-center text-bold">What city do you prefer to study in?</label>
+  <div class="Search input_container">
+   <select name="cityStudy" placeholder="City" id="selectCity" multiple="multiple"></select>
+ </div>
+ <button id="first-step" onclick="change_step_next(2);" type="button" class="btn-step button accent_button button_upper">Next step</button>
+</div>
+<div class="steps closed">
+  <p class="text-small">You can skip this step</p>
+  <p class="text-medium text-bold">Finish</p>
+  <div class="wrap-step">
+   <span class="step finish active"></span>
+   <span class="step finish active"></span>
+ </div>
+ <label for="" class="text-small text-bold">Please, add your photo</label>
+ <div class="button-wrapper">
+   <span class="text-small label">Add file</span>
+   <input type="file" name="photo" id="photo" class="upload-box" placeholder="Add file" />
+
+ </div>
+ <label for="" class="text-small text-bold">Additional Information</label>
+ <textarea id="additional" name="additional" class="additional" placeholder="In the supplemented information, you can indicate the number of students with whom you want to study, your area where you live, features of the approach, as well as any information that you would like to convey to the student"></textarea>
+ <button id="third-step" type="submit" class="btn-step button accent_button button_upper">Finish</button>
+ <span class="text-small previous-step" onclick="change_step_prev(1)" id="previous-step2">Previous step</span>
+</div>
+<div class="modal-overlay closed" id="modal-overlay2"></div>
+<div class="modal closed" id="modal2" aria-hidden="true" aria-labelledby="modalTitle" aria-describedby="modalDescription" role="dialog">
+  <div class="modal-guts" role="document">
+   <p class="text-medium text-bold">Thank you!</p>
+   <p class="text-small">That`s all! Now you can start use our servise</p>
+   <button class="button accent_button button_upper" type="submit" id="close-button2">Begin</button>
+ </div>
+</div>
+</form>
+<script src="js/jsfile.js"></script>
+<script>
+  UserReg();
+</script>
+</body>
+</html>
