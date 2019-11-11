@@ -5,6 +5,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\font\Avenir-Black.woff2" />
+    <None Include="wwwroot\font\Avenir-BlackOblique.woff2" />
+    <None Include="wwwroot\font\Avenir-Book.woff2" />
+    <None Include="wwwroot\font\Avenir-BookOblique.woff2" />
+    <None Include="wwwroot\font\Avenir-Heavy.woff2" />
+    <None Include="wwwroot\font\Avenir-HeavyOblique.woff2" />
+    <None Include="wwwroot\font\Avenir-Light.woff2" />
+    <None Include="wwwroot\font\Avenir-LightOblique.woff2" />
+    <None Include="wwwroot\font\Avenir-Medium.woff2" />
+    <None Include="wwwroot\font\Avenir-MediumOblique.woff2" />
+    <None Include="wwwroot\font\Avenir-Oblique.woff2" />
+    <None Include="wwwroot\font\Avenir-Roman.woff2" />
+    <None Include="wwwroot\js\jsfile.js" />
+    <None Include="wwwroot\js\profile.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />

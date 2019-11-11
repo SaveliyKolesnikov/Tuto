@@ -14,7 +14,7 @@ namespace Tuto.Services
             appUserId = Guid.Empty;
             if (user is AppUser appUser)
             {
-                appUserId = appUser?.User?.UserId ?? Guid.Empty;
+                appUserId = appUser?.User?.Id ?? Guid.Empty;
             }
             return appUserId != Guid.Empty;
         }

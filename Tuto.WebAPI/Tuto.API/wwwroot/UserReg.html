@@ -29,7 +29,7 @@
     <a href="#" class="logo">Tuto</a>
   </h4>
 </div>
-<form onsubmit="sendForm_User();" action="profile-student.html" lass="form-register">
+<form onsubmit="sendForm_User();return false;" action="return false()" lass="form-register">
   <input type="hidden" name="Id" id="IdUser" class="input-register" />
   <div class="steps">
     <p class="text-small">You always can change this information</p>
@@ -79,7 +79,8 @@
  <div class="button-wrapper">
    <span class="text-small label">Add file</span>
    <input type="file" name="photo" id="photo" class="upload-box" placeholder="Add file" />
-
+    <img src="" id="img_uploaded" alt="Uploaded photo">
+    <input type="text" name="base64" id="base64" hidden>
  </div>
  <label for="" class="text-small text-bold">Additional Information</label>
  <textarea id="additional" name="additional" class="additional" placeholder="In the supplemented information, you can indicate the number of students with whom you want to study, your area where you live, features of the approach, as well as any information that you would like to convey to the student"></textarea>

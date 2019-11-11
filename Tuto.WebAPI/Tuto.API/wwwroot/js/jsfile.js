@@ -1,11 +1,11 @@
-var URL_PATH = "file:///C:/Users/nikto/Desktop/APVZ/APVZ_LOCAL/";
+var URL_PATH = "https://localhost:44367/";
 var URL_SERVER = "https://localhost:44367/";
 
 // login page js
 
 function login_page(){
- var url = URL_SERVER + "oauth/authorize?returnUrl=" + URL_SERVER+"ChooseRole.html";
- document.querySelector("#login_url").href = url;
+   var url = URL_SERVER + "oauth/authorize?returnUrl=" + URL_SERVER+"ChooseRole.html";
+   document.querySelector("#login_url").href = url;
 }
 
 
@@ -34,7 +34,7 @@ function change_step_prev(i){
 // for TeacherReg js
 
 function TeacherReg(){
-   $.ajax({
+ $.ajax({
     type: "GET", 
     async: false,
     url: URL_SERVER+"odata/Cities",
@@ -50,12 +50,12 @@ function TeacherReg(){
 
     }
 });
-   let daywork = $("#selectday").selectize({
+ let daywork = $("#selectday").selectize({
     plugins: ['remove_button'],
     create: true,
     sortField: 'text'
 });
-   let citywork = $("#selectcity").selectize({
+ let citywork = $("#selectcity").selectize({
     plugins: ['remove_button'],
     create: true,
     maxItems: 2,
@@ -74,37 +74,30 @@ function UserReg(){
         type: "GET", 
         async: false,
         dataType: 'json',
-                url: URL_SERVER+"GetCurrentUserId",
-                success: function (data) {
-                    var selectcity = document.getElementById('IdUser');
-                    selectcity.value = data;
-                }
-            });
+        url: URL_SERVER+"oauth/GetCurrentUserId",
+        success: function (data) {
+            var selectcity = document.getElementById('IdUser');
+            selectcity.value = data;
+        }
+    });
     $.ajax({
         type: "GET", 
         async: false,
         dataType: 'json',
-                url: URL_SERVER+"odata/Cities",
-                success: function (data) {
-                  console.log("start");
-                  var obj = JSON.parse(data);
-                  var selectcity = document.getElementById('selectCity');
-                  obj['value'].forEach(function(element) {
-                    var name = element['Name'];
-                    var p = document.createElement("option");
-                    p.value = name;
-                    console.log(name+"1");
-                    selectcity.appendChild(p);
-                });
+        url: URL_SERVER+"odata/Cities",
+        success: function (data) {
+            console.log(data);
+            var obj = data;
+            var selectcity = document.getElementById('selectCity');
+            obj['value'].forEach(function (element) {
+                var name = element['Name'];
+                var p = document.createElement("option");
+                p.value = name;
+                selectcity.appendChild(p);
+            });
 
-              }
-          });
-
-    
-
-
-
-
+        }
+    });
     let cityStudy = $("#selectCity").selectize({
         plugins: ['remove_button'],
         create: true,
@@ -115,29 +108,62 @@ function UserReg(){
         searchField: ['Name']
 
     });
-
+    
+    
+    $('#photo').change(function(){
+        if(this.files&& this.files[0]){
+            var reader = new FileReader();
+            reader.onloadend = function() {
+                document.querySelector('#base64').value = reader.result;
+                document.querySelector('#img_uploaded').src = reader.result;
+            }
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+    
 
 }
 function sendForm_User(){
-        var id = $('#IdUser').value;
-        var name = $('#Name').value;
-        var checkers = [
-        $('#student-home').checked,
-        $('#tutor-home').checked,
-        $('#another-location').checked
-        ];
-        var selectCity = $('#selectCity').value;
-        var bio = $('#additional').value;
-
-        document.location.href="profile-student.html";
- $.ajax({
+    var id = document.querySelector('#IdUser').value;
+    var name = document.querySelector('#Name').value;
+    var checkers = [
+    $('#student-home').checked,
+    $('#tutor-home').checked,
+    $('#another-location').checked
+    ];
+    var selectCity = document.querySelector('#selectCity>option').value;
+    var cityId = null;
+    var bio = document.querySelector('#additional').value;
+    var input_file = document.querySelector('#photo');
+    var base64 = document.querySelector('#base64').value;
+    var url = encodeURI(URL_SERVER+"Odata/Cities?$filter=Name eq '"+selectCity+"'");
+    $.ajax({
         type: "GET", 
         async: false,
         dataType: 'json',
-                url: URL_SERVER+"Odata/User",
-                success: function (data) {
-                    var selectcity = document.getElementById('IdUser');
-                    selectcity.value = data;
-                }
-            });
-    }
+        url: url,
+        success: function (data) {
+           cityId = data['value'][0]['Id'];
+           console.log(cityId);
+        }
+    });
+
+    var array_post = {
+        "Name": name,
+        "Description": bio,
+        "CityId": cityId,
+        "Picture": base64
+    };
+    console.log(array_post);
+    $.ajax({
+        type: "POST", 
+        async: false,
+        data: array_post,
+        url: URL_SERVER+"Odata/Users("+id+")",
+        success: function (data) {
+            console.log(data);
+            //document.location.href="profile-student.html";
+        }
+    });
+   
+}
