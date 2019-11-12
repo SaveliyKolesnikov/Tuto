@@ -1064,6 +1064,7 @@ a {
   position: absolute;
   right: 16px;
   top: 16px;
+  cursor: pointer;
 }
 
 .edit-form .modal-guts:first-child {
@@ -1475,6 +1476,36 @@ SETTINGS
   margin: auto;
   height: 428px;
 }
+#location + div {
+  margin-top: -15px;
+  margin-bottom: 25px;
+}
+
+.feedback-block {
+  width: 648px;
+  height: 549px;
+  display: flex;
+  justify-self: center;
+  align-self: center;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 100px;
+  border: 1px solid black;
+  margin: auto;
+}
+
+.feedback-comment {
+  display: inline-block;
+  width: 314px;
+  line-height: 22px;
+
+  color: #2c3154;
+}
+
+.feedback-block .page__group {
+  margin-bottom: 16px;
+}
+
 
 /*for Uploaded Image in form*/
 #img_uploaded{

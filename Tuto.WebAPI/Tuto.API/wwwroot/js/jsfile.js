@@ -172,9 +172,9 @@ function sendForm_User(){
     array_post["Description"] = bio;
     console.log(array_post);
     $.ajax({
-        type: "PUT", 
+        type: "PUT",
         async: false,
-        data: array_post,
+        data: { entity: array_post },
         url: URL_SERVER+"Odata/Users("+id+")",
         success: function (data) {
             console.log(data);
