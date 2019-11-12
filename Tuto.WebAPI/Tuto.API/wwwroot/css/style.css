@@ -1469,7 +1469,12 @@ SETTINGS
   margin-left: 18px; */
   min-width: 50px;
 }
-
+.profile-center__block2{
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  height: 428px;
+}
 
 /*for Uploaded Image in form*/
 #img_uploaded{

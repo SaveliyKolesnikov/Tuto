@@ -145,18 +145,34 @@ function sendForm_User(){
         success: function (data) {
            cityId = data['value'][0]['Id'];
            console.log(cityId);
-        }
-    });
+       }
+   });
+
+
 
     var array_post = {
         "Name": name,
         "Description": bio,
         "CityId": cityId,
-        "Picture": base64
+        "Picture": "base64",
+        "Email": "dsd",
+        "Surname":name
     };
+    $.ajax({
+        type: "GET", 
+        async: false,
+        dataType: 'json',
+        url: URL_SERVER+"Odata/Users("+id+")",
+        success: function (data) {
+           array_post = data;
+           console.log(array_post);
+       }
+   });
+    array_post["Name"] = name;
+    array_post["Description"] = bio;
     console.log(array_post);
     $.ajax({
-        type: "POST", 
+        type: "PUT", 
         async: false,
         data: array_post,
         url: URL_SERVER+"Odata/Users("+id+")",
@@ -165,5 +181,87 @@ function sendForm_User(){
             //document.location.href="profile-student.html";
         }
     });
-   
+
+}
+
+
+
+
+// for Profile teacher js
+
+function ProfileTeacher(){
+    var AUTHENTICATE  = null;
+    $.ajax({
+        type: "GET", 
+        async: false,
+        dataType: 'json',
+        url: URL_SERVER+"oauth/GetCurrentUserId",
+        success: function (data) {
+            AUTHENTICATE = data;
+        }
+    });
+    var modal = document.querySelector("#modal2"),
+    modalOverlay = document.querySelector("#modal-overlay2"),
+    closeButton = document.querySelector("#close-button2");
+    let openButton = document.querySelector(".edit");
+
+
+    closeButton.addEventListener("click", function () {
+        toggle(modal);
+        toggle(modalOverlay);
+    });
+
+    openButton.addEventListener("click", function () {
+        toggle(modal);
+        toggle(modalOverlay);
+    });
+
+    let comment = document.querySelector("#profile-comment");
+
+    comment.addEventListener("click", function () {
+        let first = document.querySelector(".first-slide");
+        let second = document.querySelector(".second-slide");
+        toggle(first);
+        toggle(second);
+    });
+
+    let citywork = $("#selectcity").selectize({
+        plugins: ['remove_button'],
+        create: true,
+        sortField: 'text'
+    });
+
+    let daywork = $("#selectday").selectize({
+        plugins: ['remove_button'],
+        create: true,
+        sortField: 'text'
+    });
+
+    var USR_DATA = null;
+    if(AUTHENTICATE!=null){
+        $.ajax({
+            type: "GET", 
+            async: false,
+            dataType: 'json',
+            url: URL_SERVER+"Odata/Users("+AUTHENTICATE+")",
+            success: function (data) {
+               USR_DATA = data;
+               console.log(USR_DATA);
+           }
+       });
+        var photos = document.querySelectorAll(".User_Photo");
+        [].forEach.call(photos, function(photo){
+            photo.src = USR_DATA["Picture"];
+        });
+        var names = document.querySelectorAll(".User_Name");
+        [].forEach.call(names, function(name){
+            name.innerText = USR_DATA["Name"]+" "+USR_DATA["Surname"];
+        });
+    }
+    else{
+        document.location.href="log%20in.html";
+    }
+}
+function toggle(el) {
+    el.style.display = (el.style.display == 'none') ? 'block' : 'none'
 }
