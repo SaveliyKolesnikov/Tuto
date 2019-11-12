@@ -8,7 +8,7 @@ namespace Tuto.API.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<UserInfo, User>();
+            CreateMap<UserInfo, User>().ForMember(u => u.Id, opt => opt.Ignore());
         }
     }
 }

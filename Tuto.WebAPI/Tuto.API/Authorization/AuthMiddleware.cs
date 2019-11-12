@@ -49,7 +49,7 @@ namespace Tuto.API.Authorization
 
         private static async Task<AppUser> UpdateRoleAsync(AppUser user, IRepository<User> repository)
         {
-            var newUser = await repository.Read().Include(u => u.Roles).FirstOrDefaultAsync(u => u.UserId == user.User.UserId);
+            var newUser = await repository.Read().Include(u => u.Roles).FirstOrDefaultAsync(u => u.Id == user.User.Id);
             var newRoles = new HashSet<string>(newUser.Roles.Select(x => x.Name));
             var newAppUser = new AppUser(newRoles, user.IP, newUser, DateTime.UtcNow);
 
