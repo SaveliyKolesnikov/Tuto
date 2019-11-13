@@ -2,12 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Tuto.Domain.Models.Interfaces;
 
 namespace Tuto.Domain.Models
 {
-    public class User
+    public class User : IODataEntity
     {
-        public Guid UserId { get; set; }
+        public Guid Id { get; set; }
 
         public string Email { get; set; }
 
@@ -15,10 +16,10 @@ namespace Tuto.Domain.Models
 
         public string Surname { get; set; }
 
-        public Uri Picture { get; set; }
+        public string Picture { get; set; }
 
         public TeacherInfo TeacherInfo { get; set; }
-        public Point Location { get; set; }
+        public string Address { get; set; }
         public string Description { get; set; }
         public Guid? RegionId { get; set; }
         public Region Region { get; set; }
