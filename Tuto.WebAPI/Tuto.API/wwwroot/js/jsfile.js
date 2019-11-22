@@ -265,3 +265,70 @@ function ProfileTeacher(){
 function toggle(el) {
     el.style.display = (el.style.display == 'none') ? 'block' : 'none'
 }
+// for Profile teacher js
+
+function ProfileStudent(){
+    var AUTHENTICATE  = null;
+    $.ajax({
+        type: "GET", 
+        async: false,
+        dataType: 'json',
+        url: URL_SERVER+"oauth/GetCurrentUserId",
+        success: function (data) {
+            AUTHENTICATE = data;
+        }
+    });
+    var modal = document.querySelector("#modal2"),
+    modalOverlay = document.querySelector("#modal-overlay2"),
+    closeButton = document.querySelector("#close-button2");
+    let openButton = document.querySelector(".edit");
+
+
+    closeButton.addEventListener("click", function () {
+        toggle(modal);
+        toggle(modalOverlay);
+    });
+
+    openButton.addEventListener("click", function () {
+        toggle(modal);
+        toggle(modalOverlay);
+    });
+
+
+    let citywork = $("#selectcity").selectize({
+        plugins: ['remove_button'],
+        create: true,
+        sortField: 'text'
+    });
+
+    let daywork = $("#selectday").selectize({
+        plugins: ['remove_button'],
+        create: true,
+        sortField: 'text'
+    });
+
+    var USR_DATA = null;
+    if(AUTHENTICATE!=null){
+        $.ajax({
+            type: "GET", 
+            async: false,
+            dataType: 'json',
+            url: URL_SERVER+"Odata/Users("+AUTHENTICATE+")",
+            success: function (data) {
+               USR_DATA = data;
+               console.log(USR_DATA);
+           }
+       });
+        var photos = document.querySelectorAll(".User_Photo");
+        [].forEach.call(photos, function(photo){
+            photo.src = USR_DATA["Picture"];
+        });
+        var names = document.querySelectorAll(".User_Name");
+        [].forEach.call(names, function(name){
+            name.innerText = USR_DATA["Name"]+" "+USR_DATA["Surname"];
+        });
+    }
+    else{
+        document.location.href="log%20in.html";
+    }
+}
