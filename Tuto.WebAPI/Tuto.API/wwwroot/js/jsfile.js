@@ -4,8 +4,8 @@ var URL_SERVER = "https://localhost:44367/";
 // login page js
 
 function login_page(){
-   var url = URL_SERVER + "oauth/authorize?returnUrl=" + URL_SERVER+"ChooseRole.html";
-   document.querySelector("#login_url").href = url;
+ var url = URL_SERVER + "oauth/authorize?returnUrl=" + URL_SERVER+"ChooseRole.html";
+ document.querySelector("#login_url").href = url;
 }
 
 
@@ -34,7 +34,7 @@ function change_step_prev(i){
 // for TeacherReg js
 
 function TeacherReg(){
- $.ajax({
+   $.ajax({
     type: "GET", 
     async: false,
     url: URL_SERVER+"odata/Cities",
@@ -50,12 +50,12 @@ function TeacherReg(){
 
     }
 });
- let daywork = $("#selectday").selectize({
+   let daywork = $("#selectday").selectize({
     plugins: ['remove_button'],
     create: true,
     sortField: 'text'
 });
- let citywork = $("#selectcity").selectize({
+   let citywork = $("#selectcity").selectize({
     plugins: ['remove_button'],
     create: true,
     maxItems: 2,
@@ -143,38 +143,35 @@ function sendForm_User(){
         dataType: 'json',
         url: url,
         success: function (data) {
-           cityId = data['value'][0]['Id'];
-           console.log(cityId);
-       }
-   });
+         cityId = data['value'][0]['Id'];
+         console.log(cityId);
+     }
+ });
 
 
 
-    var array_post = {
-        "Name": name,
-        "Description": bio,
-        "CityId": cityId,
-        "Picture": "base64",
-        "Email": "dsd",
-        "Surname":name
-    };
+    var array_post;
     $.ajax({
         type: "GET", 
         async: false,
         dataType: 'json',
         url: URL_SERVER+"Odata/Users("+id+")",
         success: function (data) {
-           array_post = data;
-           console.log(array_post);
-       }
-   });
+         array_post = data;
+         console.log(array_post);
+     }
+ });
+    array_post["CityId"] = cityId;
+    array_post["Picture"] = base64;
     array_post["Name"] = name;
     array_post["Description"] = bio;
     console.log(array_post);
     $.ajax({
         type: "PUT",
+        headers: {'Content-type':'application/json'},
+        dataType: 'json',
         async: false,
-        data: { entity: array_post },
+        data: JSON.stringify(array_post),
         url: URL_SERVER+"Odata/Users("+id+")",
         success: function (data) {
             console.log(data);
@@ -245,10 +242,10 @@ function ProfileTeacher(){
             dataType: 'json',
             url: URL_SERVER+"Odata/Users("+AUTHENTICATE+")",
             success: function (data) {
-               USR_DATA = data;
-               console.log(USR_DATA);
-           }
-       });
+             USR_DATA = data;
+             console.log(USR_DATA);
+         }
+     });
         var photos = document.querySelectorAll(".User_Photo");
         [].forEach.call(photos, function(photo){
             photo.src = USR_DATA["Picture"];
@@ -315,10 +312,10 @@ function ProfileStudent(){
             dataType: 'json',
             url: URL_SERVER+"Odata/Users("+AUTHENTICATE+")",
             success: function (data) {
-               USR_DATA = data;
-               console.log(USR_DATA);
-           }
-       });
+             USR_DATA = data;
+             console.log(USR_DATA);
+         }
+     });
         var photos = document.querySelectorAll(".User_Photo");
         [].forEach.call(photos, function(photo){
             photo.src = USR_DATA["Picture"];
