@@ -4,8 +4,8 @@ var URL_SERVER = "https://localhost:44367/";
 // login page js
 
 function login_page(){
- var url = URL_SERVER + "oauth/authorize?returnUrl=" + URL_SERVER+"ChooseRole.html";
- document.querySelector("#login_url").href = url;
+   var url = URL_SERVER + "oauth/authorize?returnUrl=" + URL_SERVER+"ChooseRole.html";
+   document.querySelector("#login_url").href = url;
 }
 
 
@@ -34,7 +34,7 @@ function change_step_prev(i){
 // for TeacherReg js
 
 function TeacherReg(){
-   $.ajax({
+ $.ajax({
     type: "GET", 
     async: false,
     url: URL_SERVER+"odata/Cities",
@@ -50,12 +50,12 @@ function TeacherReg(){
 
     }
 });
-   let daywork = $("#selectday").selectize({
+ let daywork = $("#selectday").selectize({
     plugins: ['remove_button'],
     create: true,
     sortField: 'text'
 });
-   let citywork = $("#selectcity").selectize({
+ let citywork = $("#selectcity").selectize({
     plugins: ['remove_button'],
     create: true,
     maxItems: 2,
@@ -113,9 +113,15 @@ function UserReg(){
     $('#photo').change(function(){
         if(this.files&& this.files[0]){
             var reader = new FileReader();
-            reader.onloadend = function() {
-                document.querySelector('#base64').value = reader.result;
-                document.querySelector('#img_uploaded').src = reader.result;
+            reader.onload = function() {
+                var img = new Image();
+                img.onload = function(){
+                    var canvas = $("#canvas")[0];
+                    var ctx = canvas.getContext('2d');
+                    ctx.clearRect(0,0,canvas.width,canvas.height);
+                    ctx.drawImage(img, 0, 0,img.width,img.height,0,0,200,200);
+                }
+                img.src = event.target.result;
             }
             reader.readAsDataURL(this.files[0]);
         }
@@ -135,7 +141,7 @@ function sendForm_User(){
     var cityId = null;
     var bio = document.querySelector('#additional').value;
     var input_file = document.querySelector('#photo');
-    var base64 = document.querySelector('#base64').value;
+    var base64 = document.querySelector('#canvas').toDataURL('image/jpeg',0.7);
     var url = encodeURI(URL_SERVER+"Odata/Cities?$filter=Name eq '"+selectCity+"'");
     $.ajax({
         type: "GET", 
@@ -143,10 +149,10 @@ function sendForm_User(){
         dataType: 'json',
         url: url,
         success: function (data) {
-         cityId = data['value'][0]['Id'];
-         console.log(cityId);
-     }
- });
+           cityId = data['value'][0]['Id'];
+           console.log(cityId);
+       }
+   });
 
 
 
@@ -157,10 +163,10 @@ function sendForm_User(){
         dataType: 'json',
         url: URL_SERVER+"Odata/Users("+id+")",
         success: function (data) {
-         array_post = data;
-         console.log(array_post);
-     }
- });
+           array_post = data;
+           console.log(array_post);
+       }
+   });
     array_post["CityId"] = cityId;
     array_post["Picture"] = base64;
     array_post["Name"] = name;
@@ -173,8 +179,16 @@ function sendForm_User(){
         async: false,
         data: JSON.stringify(array_post),
         url: URL_SERVER+"Odata/Users("+id+")",
-        success: function (data) {
-            console.log(data);
+        success: function (data, textStatus, xhr) {
+            var status = xhr.status;
+            switch(status){
+                case 204:
+                    location.href = URL_PATH+"profile-student.html";
+                    break;
+                default:
+                    alert("ServerError");
+                    break;
+            }
             //document.location.href="profile-student.html";
         }
     });
@@ -242,10 +256,10 @@ function ProfileTeacher(){
             dataType: 'json',
             url: URL_SERVER+"Odata/Users("+AUTHENTICATE+")",
             success: function (data) {
-             USR_DATA = data;
-             console.log(USR_DATA);
-         }
-     });
+               USR_DATA = data;
+               console.log(USR_DATA);
+           }
+       });
         var photos = document.querySelectorAll(".User_Photo");
         [].forEach.call(photos, function(photo){
             photo.src = USR_DATA["Picture"];
@@ -312,10 +326,10 @@ function ProfileStudent(){
             dataType: 'json',
             url: URL_SERVER+"Odata/Users("+AUTHENTICATE+")",
             success: function (data) {
-             USR_DATA = data;
-             console.log(USR_DATA);
-         }
-     });
+               USR_DATA = data;
+               console.log(USR_DATA);
+           }
+       });
         var photos = document.querySelectorAll(".User_Photo");
         [].forEach.call(photos, function(photo){
             photo.src = USR_DATA["Picture"];

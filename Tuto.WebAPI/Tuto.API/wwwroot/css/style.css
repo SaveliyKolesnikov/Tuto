@@ -704,7 +704,7 @@ textarea::-webkit-input-placeholder {
 .img_profile_mini img {
   display: inline;
   margin: 0 auto;
-  height: 150%;
+/*  height: 150%;*/
   width: 100%;
 }
 
@@ -1508,6 +1508,6 @@ SETTINGS
 
 
 /*for Uploaded Image in form*/
-#img_uploaded{
-  width: 80%;
+#canvas{
+  border: 2px dashed #6b76cb;
 }
