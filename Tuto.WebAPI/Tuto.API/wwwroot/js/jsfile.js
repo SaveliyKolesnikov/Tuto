@@ -6,8 +6,8 @@ var PROFILE_PAGE = "profile-student.html";
 // login page js
 
 function login_page(){
- var url = URL_SERVER + "oauth/authorize?returnUrl=" + URL_SERVER+"ChooseRole.html";
- document.querySelector("#login_url").href = url;
+   var url = URL_SERVER + "oauth/authorize?returnUrl=" + URL_SERVER+"ChooseRole.html";
+   document.querySelector("#login_url").href = url;
 }
 function Render(){
     var play = document.createElement("div");
@@ -22,10 +22,10 @@ function Render(){
         var interhellopreloader = setInterval(function(){
             el.style.opacity = el.style.opacity - 0.05;
             if (el.style.opacity <=0.05){
-               clearInterval(interhellopreloader);
-               hellopreloader.style.display = "none";
-           }
-       },16);
+             clearInterval(interhellopreloader);
+             hellopreloader.style.display = "none";
+         }
+     },16);
     }
     window.onload = function(){
         setTimeout(function(){fadeOutnojquery(hellopreloader);},1000);
@@ -65,10 +65,10 @@ function Logout(){
             var status = xhr.status;
             switch(status){
                 case 200:
-                    location.href = URL_PATH+LOGIN_PAGE;
+                location.href = URL_PATH+LOGIN_PAGE;
                 break;
                 default:
-                    alert("ServerError");
+                alert("ServerError");
                 break;
             }
         }
@@ -84,11 +84,11 @@ function DeleteUser(){
         success: function (data, textStatus, xhr) {
             var status = xhr.status;
             switch(status){
-                case 200:
-                    location.href = URL_PATH+LOGIN_PAGE;
+                case 204:
+                location.href = URL_PATH+LOGIN_PAGE;
                 break;
                 default:
-                    alert("ServerError");
+                alert("ServerError");
                 break;
             }
         }
@@ -160,6 +160,34 @@ function setCities(id){
             });
         }
     });
+    let cityStudy = $(id).selectize({
+        plugins: ['remove_button'],
+        create: true,
+        maxItems: 2,
+        sortField: 'Name',
+        valueField: 'Name',
+        labelField: 'Name',
+        searchField: ['Name']
+
+    });
+}
+function uploadPhoto(upload,canvas){
+    $("#photo").change(function(){
+        if(this.files&& this.files[0]){
+            var reader = new FileReader();
+            reader.onload = function() {
+                var img = new Image();
+                img.onload = function(){
+                    var canvas = $("#canvas")[0];
+                    var ctx = canvas.getContext('2d');
+                    ctx.clearRect(0,0,canvas.width,canvas.height);
+                    ctx.drawImage(img, 0, 0,img.width,img.height,0,0,200,200);
+                }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
 }
 // for select objects
 function s(obj){
@@ -211,55 +239,15 @@ function toggle(el) {
 }
 // for TeacherReg js
 function TeacherReg(AUTHENTICATE){
-    var selectcity = document.getElementById('IdUser');
-    selectcity.value = AUTHENTICATE;
-    $.ajax({
-        type: "GET", 
-        async: false,
-        dataType: 'json',
-        url: URL_SERVER+"odata/Cities",
-        success: function (data) {
-            console.log(data);
-            var obj = data;
-            var selectcity = document.getElementById('selectCity');
-            obj['value'].forEach(function (element) {
-                var name = element['Name'];
-                var p = document.createElement("option");
-                p.value = name;
-                selectcity.appendChild(p);
-            });
-        }
-    });
+    var IdUser = document.getElementById('IdUser');
+    idUser.value = AUTHENTICATE;
+    setCities('#selectCity'); 
     let daywork = $("#selectday").selectize({
         plugins: ['remove_button'],
         create: true,
         sortField: 'text'
     });
-    let citywork = $("#selectcity").selectize({
-        plugins: ['remove_button'],
-        create: true,
-        maxItems: 2,
-        sortField: 'Name',
-        valueField: 'Name',
-        labelField: 'Name',
-        searchField: ['Name']
-    });
-    $('#photo').change(function(){
-        if(this.files&& this.files[0]){
-            var reader = new FileReader();
-            reader.onload = function() {
-                var img = new Image();
-                img.onload = function(){
-                    var canvas = $("#canvas")[0];
-                    var ctx = canvas.getContext('2d');
-                    ctx.clearRect(0,0,canvas.width,canvas.height);
-                    ctx.drawImage(img, 0, 0,img.width,img.height,0,0,200,200);
-                }
-                img.src = event.target.result;
-            }
-            reader.readAsDataURL(this.files[0]);
-        }
-    });
+    uploadPhoto("#photo","#canvas");
 }
 function sendForm_Teacher(){
     var id = document.querySelector('#IdUser').value;
@@ -337,52 +325,8 @@ function UserReg(AUTHENTICATE){
 
     var idUser = document.getElementById('IdUser');
     idUser.value = AUTHENTICATE;
-    $.ajax({
-        type: "GET", 
-        async: false,
-        dataType: 'json',
-        url: URL_SERVER+"odata/Cities",
-        success: function (data) {
-            console.log(data);
-            var obj = data;
-            var selectcity = document.getElementById('selectCity');
-            obj['value'].forEach(function (element) {
-                var name = element['Name'];
-                var p = document.createElement("option");
-                p.value = name;
-                selectcity.appendChild(p);
-            });
-
-        }
-    });
-    let cityStudy = $("#selectCity").selectize({
-        plugins: ['remove_button'],
-        create: true,
-        maxItems: 2,
-        sortField: 'Name',
-        valueField: 'Name',
-        labelField: 'Name',
-        searchField: ['Name']
-
-    });
-    
-    
-    $('#photo').change(function(){
-        if(this.files&& this.files[0]){
-            var reader = new FileReader();
-            reader.onload = function() {
-                var img = new Image();
-                img.onload = function(){
-                    var canvas = $("#canvas")[0];
-                    var ctx = canvas.getContext('2d');
-                    ctx.clearRect(0,0,canvas.width,canvas.height);
-                    ctx.drawImage(img, 0, 0,img.width,img.height,0,0,200,200);
-                }
-                img.src = event.target.result;
-            }
-            reader.readAsDataURL(this.files[0]);
-        }
-    });
+    setCities('#selectCity');   
+    uploadPhoto("#photo","#canvas");
 }
 function sendForm_User(){
     var id = s('#IdUser').value;
@@ -433,6 +377,8 @@ function sendForm_User(){
 }
 // for Profile teacher js
 function ProfileTeacher(AUTHENTICATE){
+    setCities('#selectCity');
+    uploadPhoto("#photo","#canvas");
     var modal = s("#modal2"),
     modalOverlay = s("#modal-overlay2"),
     closeButton = s("#close-button2");
@@ -457,13 +403,6 @@ function ProfileTeacher(AUTHENTICATE){
         toggle(first);
         toggle(second);
     });
-
-    let citywork = s("#selectcity").selectize({
-        plugins: ['remove_button'],
-        create: true,
-        sortField: 'text'
-    });
-
     let daywork = s("#selectday").selectize({
         plugins: ['remove_button'],
         create: true,
@@ -482,30 +421,21 @@ function ProfileTeacher(AUTHENTICATE){
 }
 // for Profile Student js
 function ProfileStudent(AUTHENTICATE){
+    setCities('#selectCity');
+    uploadPhoto("#photo","#canvas");
 
     var modal = s("#modal2"),
     modalOverlay = s("#modal-overlay2"),
     closeButton = s("#close-button2");
     let openButton = s(".edit");
-
-
     closeButton.addEventListener("click", function () {
         toggle(modal);
         toggle(modalOverlay);
     });
-
     openButton.addEventListener("click", function () {
         toggle(modal);
         toggle(modalOverlay);
     });
-
-
-    let citywork = $("#selectcity").selectize({
-        plugins: ['remove_button'],
-        create: true,
-        sortField: 'text'
-    });
-
     let daywork = $("#selectday").selectize({
         plugins: ['remove_button'],
         create: true,
@@ -513,7 +443,6 @@ function ProfileStudent(AUTHENTICATE){
     });
 
     var USR_DATA = getUser(AUTHENTICATE);
-
     s("#place").innerText = getCityName(USR_DATA["CityId"]);
     s("#additional_text").innerText = USR_DATA["Description"] 
 
@@ -526,7 +455,6 @@ function ProfileStudent(AUTHENTICATE){
             location.appendChild(span);
         }
     }
-
     var photos = sa(".User_Photo");
     [].forEach.call(photos, function(photo){
         photo.src = USR_DATA["Picture"];
@@ -534,5 +462,64 @@ function ProfileStudent(AUTHENTICATE){
     var names = sa(".User_Name");
     [].forEach.call(names, function(name){
         name.innerText = USR_DATA["Name"]+" "+USR_DATA["Surname"];
-    });   
+    }); 
+    var canvas = s("#canvas");
+    var ctx = canvas.getContext("2d");
+
+    var image = new Image();
+    image.onload = function() {
+        ctx.drawImage(image, 0, 0);
+    };
+    image.src =USR_DATA["Picture"];
+    s("#change_name").value = USR_DATA["Name"];
+    s("#change_surname").value = USR_DATA["Surname"];
+    s("#change_additional").value = USR_DATA["Description"];
+
+}
+function ChangeProfileStudent(AUTHENTICATE){
+    var USR_DATA = getUser(AUTHENTICATE);
+    var id = AUTHENTICATE;
+    var name = s('#change_name').value;
+    var surname = s('#change_surname').value;
+    var checkers = {
+        'Student`s home':s('#student-home').checked,
+        'Tutors`s home':s('#tutor-home').checked,
+        'Another location':s('#another-location').checked
+    };
+    var selectCity = s('#selectCity>option');
+    var bio = s('#change_additional').value;
+    var input_file = s('#photo');
+    var base64 = s('#canvas').toDataURL('image/jpeg',0.7);
+    if(!id||!name||!surname||!selectCity||!bio||!input_file||!base64){
+        alert("Something Wrong");
+        return;
+    }
+    var cityId = getCityId(selectCity.value);
+    USR_DATA["CityId"] = cityId;
+    USR_DATA["Picture"] = base64;
+    USR_DATA["Name"] = name;
+    USR_DATA["Surname"] = surname;
+    USR_DATA["Address"] = JSON.stringify(checkers);
+    USR_DATA["Description"] = bio;
+    console.log(USR_DATA);
+    $.ajax({
+        type: "PUT",
+        headers: {'Content-type':'application/json'},
+        dataType: 'json',
+        async: false,
+        data: JSON.stringify(USR_DATA),
+        url: URL_SERVER+"Odata/Users("+id+")",
+        success: function (data, textStatus, xhr) {
+            var status = xhr.status;
+            switch(status){
+                case 204:
+                location.href = URL_PATH+"profile-student.html";
+                break;
+                default:
+                alert("ServerError");
+                break;
+            }
+            //document.location.href="profile-student.html";
+        }
+    });
 }

@@ -202,7 +202,7 @@
 <div class="modal edit-form" id="modal2" aria-hidden="true" style="display: none;" aria-labelledby="modalTitle"
 aria-describedby="modalDescription" role="dialog">
 <div class="modal-guts" role="document">
-    <form action="">
+    <form action="" onsubmit="return false;">
         <svg class="cancel" id="close-button2" width="20" height="20" viewBox="0 0 20 20" fill="none"
         xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -212,68 +212,50 @@ aria-describedby="modalDescription" role="dialog">
 
     <p class="text-medium text-bold">Student`s account editing</p>
     <div class="profile-head">
-        <div class="img_profile_maxi">
-            <img src="img/Profile.JPG" alt="" class="User_Photo" />
-        </div>
         <div class="button-wrapper">
-            <span class="text-small label">
-                Change photo
-            </span>
-            <input type="file" name="photo" id="photo" class="upload-box" placeholder="Add file">
-        </div>
-    </div>
-    <hr class="edit-line">
-    <div class="input_container">
-        <i class="far fa-user input-icon" aria-hidden="true"></i>
-        <input type="text" placeholder="Name" class="input-register">
-    </div>
-    <div class="input_container">
-        <i class="far fa-user input-icon" aria-hidden="true"></i>
-        <input type="text" placeholder="Surame" class="input-register">
-    </div>
-    <div class="Search">
-        <select name="citywork" placeholder="City" id="selectcity" multiple="multiple">
-            <option value="Kiev">Kiev</option>
-            <option value="Kharkiv">Kharkiv</option>
-            <option value="Odessa">Odessa</option>
-            <option value="Dnipro">Dnipro</option>
-            <option value="Donezk"> Donezk</option>
-            <option value="Zaporozhye">Zaporozhye</option>
-        </select>
-    </div>
-    <script>
-        let citywork = $("#selectcity").selectize({
-            plugins: ['remove_button'],
-            create: true,
-            sortField: 'text'
-        });
-    </script>
-    <div class="place_input">
-        <label class="container">Student`s home
-            <input type="checkbox" id="student-home" checked="checked" />
-            <span class="checkmark"></span>
-        </label>
-        <label class="container">Tutor`s home
-            <input type="checkbox" id="tutor-home" />
-            <span class="checkmark"></span>
-        </label>
-        <label class="container">Another location
-            <input type="checkbox" id="another-location" />
-            <span class="checkmark"></span>
-        </label>
-    </div>
-    <textarea id="additional" name="additional" class="additional"
-    placeholder="In the supplemented information, you can indicate the number of students with whom you want to study, features of the approach, as well as any information that you would like to convey to the student"></textarea>
+            <span class="text-small label">Change photo</span>
+         <input type="file" name="photo" id="photo" class="upload-box" placeholder="Add file">
+         <canvas id="canvas" width="200" height="200" style="background-color:#ffffff;"></canvas>
+     </div>
+ </div>
+ <hr class="edit-line">
+ <div class="input_container">
+    <i class="far fa-user input-icon" aria-hidden="true"></i>
+    <input type="text" id="change_name" placeholder="Name" class="input-register">
+</div>
+<div class="input_container">
+    <i class="far fa-user input-icon" aria-hidden="true"></i>
+    <input type="text" id="change_surname" placeholder="Surame" class="input-register">
+</div>
+<div class="Search">
+    <select name="citywork" placeholder="City" id="selectCity" multiple="multiple"></select>
+</div>
+<div class="place_input">
+    <label class="container">Student`s home
+        <input type="checkbox" id="student-home" checked="checked" />
+        <span class="checkmark"></span>
+    </label>
+    <label class="container">Tutor`s home
+        <input type="checkbox" id="tutor-home" />
+        <span class="checkmark"></span>
+    </label>
+    <label class="container">Another location
+        <input type="checkbox" id="another-location" />
+        <span class="checkmark"></span>
+    </label>
+</div>
+<textarea id="change_additional" name="additional" class="additional"
+placeholder="In the supplemented information, you can indicate the number of students with whom you want to study, features of the approach, as well as any information that you would like to convey to the student"></textarea>
 
 
 
 
 
-    <button class="button accent_button button_upper" type="submit" id="edit">
-        Save
-    </button>
+<button onclick="ChangeProfileStudent(Login());" class="button accent_button button_upper" type="submit" id="edit">
+    Save
+</button>
 
-    <p class="text-small delete" onclick="DeleteUser()">Delete account</p>
+<p class="text-small delete" onclick="DeleteUser();">Delete account</p>
 
 </form>
 </div>

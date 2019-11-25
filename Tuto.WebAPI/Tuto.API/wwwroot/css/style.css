@@ -707,6 +707,13 @@ textarea::-webkit-input-placeholder {
   /*  height: 150%;*/
   width: 100%;
 }
+.img_profile_maxi canvas,
+.img_profile_mini canvas {
+  display: inline;
+  margin: 0 auto;
+  height: 100%;
+  width: 100%;
+}
 
 .profile-link {
   margin-top: 60px;
@@ -1080,7 +1087,7 @@ a {
 }
 
 .edit-form .profile-head {
-  margin-top: 23px;
+  margin: 0;
 }
 
 .edit-form .button-wrapper {
