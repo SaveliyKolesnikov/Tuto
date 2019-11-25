@@ -119,7 +119,8 @@
                 <span class="text-small label">
                     Add file
                 </span>
-                <input type="file" name="photo" id="photo" class="upload-box" placeholder="Add file">
+                <input type="file" name="photo" id="photo" class="upload-box" placeholder="Add file" />
+                <canvas id="canvas"  width="200" height="200" style="background-color:#ffffff;"></canvas>
             </div>
             <label for="" class="text-small text-bold">Additional Information</label>
             <textarea id="additional" name="additional" class="additional"
@@ -152,7 +153,8 @@
 
 <script src="js/jsfile.js"></script>
 <script>
-    TeacherReg();
+    var a = Login();
+    TeacherReg(a);
 </script>
 </body>
 

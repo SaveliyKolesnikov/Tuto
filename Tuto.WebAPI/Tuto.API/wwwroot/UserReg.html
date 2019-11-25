@@ -44,6 +44,12 @@
      <input type="text" id="Name" placeholder="Name" class="input-register" />
 
    </div>
+   <label for="" class="text-small text-bold">What is your surname?</label>
+   <div class="input_container">
+     <i class="far fa-user input-icon"></i>
+     <input type="text" id="Surname" placeholder="Surame" class="input-register" />
+
+   </div>
    <label for="" class="text-small text-bold">What location do you prefer?</label>
    <div class="place_input">
      <label class="container">Student`s home
@@ -97,7 +103,8 @@
 </form>
 <script src="js/jsfile.js"></script>
 <script>
-  UserReg();
+  var a = Login();
+  UserReg(a);
 </script>
 </body>
 </html>

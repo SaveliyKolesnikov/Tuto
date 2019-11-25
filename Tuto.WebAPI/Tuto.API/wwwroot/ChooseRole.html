@@ -48,32 +48,9 @@
 
 	<script src="js/jsfile.js"></script>
 	<script>
-
-		var closeButton = document.querySelector("#close-button");
-		closeButton.addEventListener("click", function () {
-			let form = document.forms.choose_role;
-			let elem = form.elements.choose_role_radio;
-			var radioActive = false;
-			for (prop in elem) {
-				if (elem[prop].checked) {
-					radioActive = true;
-				}
-			}
-
-			if (radioActive) {
-				if (elem[0].checked) {
-					document.location.href=URL_PATH+"UserReg.html";
-				} else if (elem[1].checked) {
-					document.location.href=URL_PATH+"TeacherReg.html";
-				}
-			} else {
-				alert("You didn`t choose the role")
-			}
-		});
-
-
-
-
+		isNew()
+		var a = Login();
+		ChooseRole(a);
 	</script>
 </body>
 </html>

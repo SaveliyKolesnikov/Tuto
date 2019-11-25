@@ -99,7 +99,7 @@
                         d="M14.3271 7.19759L11.5957 4.46626C11.427 4.29754 11.1564 4.29754 10.9877 4.46626C10.819 4.63498 10.819 4.90557 10.9877 5.07428L12.9869 7.07344H4.26764C4.02889 7.07344 3.83789 7.26444 3.83789 7.50319C3.83789 7.74195 4.02889 7.93295 4.26764 7.93295H12.9869L10.9877 9.93211C10.819 10.1008 10.819 10.3714 10.9877 10.5401C11.0705 10.6229 11.1819 10.6675 11.2901 10.6675C11.3984 10.6675 11.5098 10.6261 11.5926 10.5401L14.3239 7.8088C14.4958 7.6369 14.4958 7.36313 14.3271 7.19759Z"
                         fill="#2C3154" />
                     </svg>
-                    <span class="text-mini">Log out</span>
+                    <span class="text-mini" onclick="Logout();">Log out</span>
                 </a>
             </div>
         </div>
@@ -110,13 +110,10 @@
                     <div class="img_profile_maxi">
                         <img src="img/Profile.JPG" alt="" class="User_Photo" />
                     </div>
-                    <div class="">
+                    <div class="profile-head-name-block">
                         <p class="text-small">Student</p>
                         <p class="text-medium User_Name">Katie Atakulova</p>
-                        <p class="text-nano">English,Deutsch</p>
                         <div id="location">
-                            <span class="location text-nano">Student`s home</span><span
-                            class="location text-nano">Another location</span>
                         </div>
                     </div>
                 </div>
@@ -232,6 +229,10 @@ aria-describedby="modalDescription" role="dialog">
         <i class="far fa-user input-icon" aria-hidden="true"></i>
         <input type="text" placeholder="Name" class="input-register">
     </div>
+     <div class="input_container">
+        <i class="far fa-user input-icon" aria-hidden="true"></i>
+        <input type="text" placeholder="Surame" class="input-register">
+    </div>
     <div class="Search">
         <select name="citywork" placeholder="City" id="selectcity" multiple="multiple">
             <option value="Kiev">Kiev</option>
@@ -284,7 +285,8 @@ aria-describedby="modalDescription" role="dialog">
 <!-- <script src="js/profile.js"></script> -->
 <script src="js/jsfile.js"></script> 
 <script>
-    ProfileStudent();
+    var a = Login();
+    ProfileStudent(a);
 </script>
 </body>
 
