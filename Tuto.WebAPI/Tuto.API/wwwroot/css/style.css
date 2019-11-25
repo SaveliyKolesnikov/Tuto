@@ -1125,6 +1125,7 @@ a {
 .edit-form .delete {
   color: #eb5757;
   margin: 24px 0 44px;
+  cursor: pointer;
 }
 
 /* Search for tutor */
@@ -1512,4 +1513,17 @@ SETTINGS
 /*for Uploaded Image in form*/
 #canvas{
   border: 2px dashed #6b76cb;
+}
+#hellopreloader>p{
+  display:none;
+}
+#hellopreloader_preload{
+  display: block;
+  position: fixed;
+  z-index: 99999;
+  top: 0;left: 0;
+  width: 100%;
+  height: 100%;
+  background: #fff url(/img/preloader.svg) center center no-repeat;
+  background-size:41px;
 }

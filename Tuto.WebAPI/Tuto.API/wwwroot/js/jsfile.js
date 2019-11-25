@@ -9,8 +9,28 @@ function login_page(){
  var url = URL_SERVER + "oauth/authorize?returnUrl=" + URL_SERVER+"ChooseRole.html";
  document.querySelector("#login_url").href = url;
 }
-
-
+function Render(){
+    var play = document.createElement("div");
+    var round = document.createElement("div");
+    play.setAttribute("id", "hellopreloader");
+    round.setAttribute("id", "hellopreloader_preload");
+    play.appendChild(round);
+    document.body.appendChild(play);
+    var hellopreloader = document.getElementById("hellopreloader_preload");
+    function fadeOutnojquery(el){
+        el.style.opacity = 1;
+        var interhellopreloader = setInterval(function(){
+            el.style.opacity = el.style.opacity - 0.05;
+            if (el.style.opacity <=0.05){
+               clearInterval(interhellopreloader);
+               hellopreloader.style.display = "none";
+           }
+       },16);
+    }
+    window.onload = function(){
+        setTimeout(function(){fadeOutnojquery(hellopreloader);},1000);
+    };
+}
 //Check Login status
 function isNew(){
     if(getUser(Login())["CityId"])
@@ -35,21 +55,42 @@ function Login(){
     location.href = URL_PATH+LOGIN_PAGE;
 }
 function Logout(){
-   $.ajax({
-        type: "POST", 
+    $.ajax({
+        type: "POST",
+        dataType: 'json',
         async: false,
+        data: null,
         url: URL_SERVER+"oauth/LogOut",
         success: function (data, textStatus, xhr) {
             var status = xhr.status;
             switch(status){
                 case 200:
-                location.href = URL_PATH+LOGIN_PAGE;
+                    location.href = URL_PATH+LOGIN_PAGE;
                 break;
                 default:
-                alert("ServerError");
+                    alert("ServerError");
                 break;
             }
-            //document.location.href="profile-student.html";
+        }
+    });
+}
+function DeleteUser(){
+    var id = Login();
+    $.ajax({
+        type: "DELETE", 
+        async: false,
+        dataType: 'json',
+        url: URL_SERVER+"Odata/Users("+id+")",
+        success: function (data, textStatus, xhr) {
+            var status = xhr.status;
+            switch(status){
+                case 200:
+                    location.href = URL_PATH+LOGIN_PAGE;
+                break;
+                default:
+                    alert("ServerError");
+                break;
+            }
         }
     });
 }
@@ -101,7 +142,6 @@ function getUser(id){
         USR["Address"] = JSON.parse(USR["Address"]);
     return USR;
 }
-
 function setCities(id){
     $.ajax({
         type: "GET", 
@@ -121,18 +161,13 @@ function setCities(id){
         }
     });
 }
-
 // for select objects
-
 function s(obj){
     return document.querySelector(obj);
 }
-
-
 function sa(obj){
     return document.querySelectorAll(obj);
 }
-
 //for ChooseRole js
 function ChooseRole(AUTHENTICATE){
     var closeButton = document.querySelector("#close-button");
@@ -157,9 +192,7 @@ function ChooseRole(AUTHENTICATE){
         }
     });
 }
-
 // for UserReg & TeacherReg js
-
 function change_step_next(i){
     i--;
     if(i>0&&i<$('.steps').length){
@@ -176,9 +209,7 @@ function change_step_prev(i){
 function toggle(el) {
     el.style.display = (el.style.display == 'none') ? 'block' : 'none'
 }
-
 // for TeacherReg js
-
 function TeacherReg(AUTHENTICATE){
     var selectcity = document.getElementById('IdUser');
     selectcity.value = AUTHENTICATE;
@@ -301,9 +332,7 @@ function sendForm_Teacher(){
         }
     });
 }
-
 // for UserReg js
-
 function UserReg(AUTHENTICATE){
 
     var idUser = document.getElementById('IdUser');
@@ -365,14 +394,14 @@ function sendForm_User(){
         'Another location':s('#another-location').checked
     };
     var selectCity = s('#selectCity>option');
-    var cityId = getCityId(selectCity.value);
     var bio = s('#additional').value;
     var input_file = s('#photo');
     var base64 = s('#canvas').toDataURL('image/jpeg',0.7);
-    if(!id||!name||!surname||!selectCity||!cityId||!bio||!input_file||!base64){
+    if(!id||!name||!surname||!selectCity||!bio||!input_file||!base64){
         alert("Something Wrong");
         return;
     }
+    var cityId = getCityId(selectCity.value);
     var array_post = getUser(id);
     array_post["CityId"] = cityId;
     array_post["Picture"] = base64;
@@ -401,14 +430,8 @@ function sendForm_User(){
             //document.location.href="profile-student.html";
         }
     });
-
 }
-
-
-
-
 // for Profile teacher js
-
 function ProfileTeacher(AUTHENTICATE){
     var modal = s("#modal2"),
     modalOverlay = s("#modal-overlay2"),
@@ -455,12 +478,9 @@ function ProfileTeacher(AUTHENTICATE){
     var names = sa(".User_Name");
     [].forEach.call(names, function(name){
         name.innerText = USR_DATA["Name"]+" "+USR_DATA["Surname"];
-    });
-    
+    });    
 }
-
 // for Profile Student js
-
 function ProfileStudent(AUTHENTICATE){
 
     var modal = s("#modal2"),
@@ -514,6 +534,5 @@ function ProfileStudent(AUTHENTICATE){
     var names = sa(".User_Name");
     [].forEach.call(names, function(name){
         name.innerText = USR_DATA["Name"]+" "+USR_DATA["Surname"];
-    });
-    
+    });   
 }

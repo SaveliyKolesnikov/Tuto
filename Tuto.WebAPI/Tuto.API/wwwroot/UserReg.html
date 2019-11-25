@@ -8,19 +8,17 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
   <title>Step one</title>
+
+  
   <link rel="stylesheet" href="css/normalize.css" />
-
   <link rel="stylesheet" href="font/stylesheet.css" />
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/css/selectize.default.css" />
-
+  <link rel="stylesheet" href="/libs/selectize.default.css" />
   <link rel="stylesheet" href="css/style.css" />
-
-  <script src="https://kit.fontawesome.com/805074c2dd.js" crossorigin="anonymous"></script>
+  <script src="/libs/kit.fontawesome.js" crossorigin="anonymous"></script>
 </head>
 <body>
-  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/js/standalone/selectize.min.js"></script>
+  <script src="/libs/jquery-2.2.4.min.js"></script>
+  <script src="/libs/selectize.min.js"></script>
 
 
   <div>
@@ -85,7 +83,7 @@
  <div class="button-wrapper">
    <span class="text-small label">Add file</span>
    <input type="file" name="photo" id="photo" class="upload-box" placeholder="Add file" />
-    <canvas id="canvas"  width="200" height="200" style="background-color:#ffffff;"></canvas>
+   <canvas id="canvas"  width="200" height="200" style="background-color:#ffffff;"></canvas>
  </div>
  <label for="" class="text-small text-bold">Additional Information</label>
  <textarea id="additional" name="additional" class="additional" placeholder="In the supplemented information, you can indicate the number of students with whom you want to study, your area where you live, features of the approach, as well as any information that you would like to convey to the student"></textarea>
@@ -103,6 +101,7 @@
 </form>
 <script src="js/jsfile.js"></script>
 <script>
+  Render();
   var a = Login();
   UserReg(a);
 </script>
