@@ -12,7 +12,6 @@ namespace Tuto.Domain
         public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<Review> Reviews { get; set; }
-        public DbSet<Region> Regions { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Subject> Subjects{ get; set; }
         public DbSet<TeacherSubject> TeacherSubjects{ get; set; }
@@ -25,12 +24,15 @@ namespace Tuto.Domain
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<User>().Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            modelBuilder.Entity<User>().Property(x => x.RegistrationTime).HasDefaultValueSql("GETUTCDATE()");
             modelBuilder.Entity<Role>().Property(x => x.RoleId).HasDefaultValueSql("NEWSEQUENTIALID()");
             modelBuilder.Entity<TeacherInfo>().Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
             modelBuilder.Entity<ChatMessage>().Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            modelBuilder.Entity<ChatMessage>().Property(x => x.SendTime).HasDefaultValueSql("GETUTCDATE()");
             modelBuilder.Entity<Lesson>().Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            modelBuilder.Entity<Lesson>().Property(x => x.CreationTime).HasDefaultValueSql("GETUTCDATE()");
             modelBuilder.Entity<Review>().Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
-            modelBuilder.Entity<Region>().Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
+            modelBuilder.Entity<Review>().Property(x => x.CreationTime).HasDefaultValueSql("GETUTCDATE()");
             modelBuilder.Entity<City>().Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
             modelBuilder.Entity<Subject>().Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");
             modelBuilder.Entity<TeacherSubject>().Property(x => x.Id).HasDefaultValueSql("NEWSEQUENTIALID()");

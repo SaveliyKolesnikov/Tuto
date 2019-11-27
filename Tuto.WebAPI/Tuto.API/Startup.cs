@@ -51,7 +51,6 @@ namespace Tuto.API
             services.AddTransient<IRepository<Lesson>, GenericRepository<Lesson>>();
             services.AddTransient<IRepository<ChatMessage>, GenericRepository<ChatMessage>>();
             services.AddTransient<IRepository<Review>, GenericRepository<Review>>();
-            services.AddTransient<IRepository<Region>, GenericRepository<Region>>();
             services.AddTransient<IRepository<City>, GenericRepository<City>>();
             services.AddTransient<IRepository<Subject>, GenericRepository<Subject>>();
             services.AddTransient<IRepository<TeacherSubject>, GenericRepository<TeacherSubject>>();
@@ -93,7 +92,6 @@ namespace Tuto.API
             builder.EntitySet<Lesson>("Lessons");
             builder.EntitySet<ChatMessage>("ChatMessages");
             builder.EntitySet<Review>("Reviews");
-            builder.EntitySet<Region>("Regions");
             builder.EntitySet<City>("Cities");
             builder.EntitySet<Subject>("Subjects");
             builder.EntitySet<TeacherSubject>("TeacherSubjects");
