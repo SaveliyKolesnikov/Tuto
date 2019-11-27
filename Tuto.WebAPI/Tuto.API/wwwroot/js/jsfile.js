@@ -6,8 +6,8 @@ var PROFILE_PAGE = "profile-student.html";
 // login page js
 
 function login_page(){
-   var url = URL_SERVER + "oauth/authorize?returnUrl=" + URL_SERVER+"ChooseRole.html";
-   document.querySelector("#login_url").href = url;
+ var url = URL_SERVER + "oauth/authorize?returnUrl=" + URL_SERVER+"ChooseRole.html";
+ document.querySelector("#login_url").href = url;
 }
 function Render(){
     var play = document.createElement("div");
@@ -22,10 +22,10 @@ function Render(){
         var interhellopreloader = setInterval(function(){
             el.style.opacity = el.style.opacity - 0.05;
             if (el.style.opacity <=0.05){
-             clearInterval(interhellopreloader);
-             hellopreloader.style.display = "none";
-         }
-     },16);
+               clearInterval(interhellopreloader);
+               hellopreloader.style.display = "none";
+           }
+       },16);
     }
     window.onload = function(){
         setTimeout(function(){fadeOutnojquery(hellopreloader);},1000);
@@ -76,6 +76,23 @@ function Logout(){
 }
 function DeleteUser(){
     var id = Login();
+    $.ajax({
+        type: "POST",
+        dataType: 'json',
+        async: false,
+        data: null,
+        url: URL_SERVER+"oauth/LogOut",
+        success: function (data, textStatus, xhr) {
+            var status = xhr.status;
+            switch(status){
+                case 200:
+                break;
+                default:
+                return;
+                break;
+            }
+        }
+    });
     $.ajax({
         type: "DELETE", 
         async: false,
@@ -154,8 +171,10 @@ function setCities(id){
             var selectcity = s(id);
             obj['value'].forEach(function (element) {
                 var name = element['Name'];
+                var id = element['Id']
                 var p = document.createElement("option");
                 p.value = name;
+                p.setAttribute("id",id);
                 selectcity.appendChild(p);
             });
         }
@@ -328,7 +347,7 @@ function UserReg(AUTHENTICATE){
     setCities('#selectCity');   
     uploadPhoto("#photo","#canvas");
 }
-function sendForm_User(){
+function sendForm_User(a){
     var id = s('#IdUser').value;
     var name = s('#Name').value;
     var surname = s('#Surname').value;
@@ -474,7 +493,32 @@ function ProfileStudent(AUTHENTICATE){
     s("#change_name").value = USR_DATA["Name"];
     s("#change_surname").value = USR_DATA["Surname"];
     s("#change_additional").value = USR_DATA["Description"];
+    s("#student-home").checked = USR_DATA["Address"]['Student`s home'];
+    s("#tutor-home").checked = USR_DATA["Address"]['Tutors`s home'];
+    s("#another-location").checked = USR_DATA["Address"]['Another location'];
+    
+    // var select = s("#selectCity");
+    // var cityName = getCityName(USR_DATA["CityId"]);
+    // var city = document.createElement("option");
+    // city.setAttribute("value", cityName);
+    // city.setAttribute("selected","selected");
+    // select.appendChild(city);
+    // var selectDiv = s(".Search>.selectize-control>.selectize-input");
+    // var cityDiv =  document.createElement("div");
+    // cityDiv.setAttribute("data-value", cityName);
+    // cityDiv.setAttribute("class", "item");
+    // cityDiv.innerHTML = cityName + '<a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a>';
+    // selectDiv.appendChild(cityDiv);
 
+
+//<option value="Aleksandrovsk" selected="selected">Aleksandrovsk</option>
+// <div class="selectize-input items has-options has-items not-full">
+//     <div data-value="Alupka" class="item">
+//         Alupka
+//         <a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a>
+//     </div>
+//     <input type="text" autocomplete="off" tabindex="" style="width: 4px; opacity: 1; position: relative; left: 0px;">
+// </div>
 }
 function ChangeProfileStudent(AUTHENTICATE){
     var USR_DATA = getUser(AUTHENTICATE);
