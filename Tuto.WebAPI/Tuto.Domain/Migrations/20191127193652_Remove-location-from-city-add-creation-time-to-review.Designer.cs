@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tuto.Domain;
 
 namespace Tuto.Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191127193652_Remove-location-from-city-add-creation-time-to-review")]
+    partial class Removelocationfromcityaddcreationtimetoreview
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,9 +29,7 @@ namespace Tuto.Domain.Migrations
 
                     b.Property<Guid>("RecipientId");
 
-                    b.Property<DateTime>("SendTime")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("GETUTCDATE()");
+                    b.Property<DateTime>("SendTime");
 
                     b.Property<Guid>("SenderId");
 
@@ -63,10 +63,6 @@ namespace Tuto.Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<DateTime>("CreationTime")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("GETUTCDATE()");
-
                     b.Property<DateTime>("LessonTime");
 
                     b.Property<Guid>("StudentId");
@@ -94,9 +90,7 @@ namespace Tuto.Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    b.Property<DateTime>("CreationTime")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("GETUTCDATE()");
+                    b.Property<DateTime>("CreationTime");
 
                     b.Property<Guid>("CreatorId");
 
@@ -200,9 +194,7 @@ namespace Tuto.Domain.Migrations
 
                     b.Property<string>("Picture");
 
-                    b.Property<DateTime>("RegistrationTime")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("GETUTCDATE()");
+                    b.Property<DateTime>("RegistrationTime");
 
                     b.Property<string>("Surname");
 
