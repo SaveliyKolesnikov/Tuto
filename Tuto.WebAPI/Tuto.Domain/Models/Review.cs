@@ -11,6 +11,7 @@ namespace Tuto.Domain.Models
         [Range(0, 5)]
         public int Mark { get; set; }
         public string Message { get; set; }
+        public DateTime CreationTime { get; set; }
         public Guid CreatorId { get; set; }
         public Guid ForWhomId { get; set; }
         [ForeignKey("CreatorId")]
