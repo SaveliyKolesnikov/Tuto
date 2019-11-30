@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
 using Tuto.API.Authorization;
 using Tuto.API.Configuration;
+using Tuto.API.Hubs;
 using Tuto.API.Mapping.MappingExtensions;
 using Tuto.Domain;
 using Tuto.Domain.Authorization;
@@ -58,6 +59,7 @@ namespace Tuto.API
             services.AddTransient<IAppUserManager, AppUserManager>();
 
             services.AddSingleton<ISessionStorage<AppUser>, SessionMemoryStorage<AppUser>>();
+            services.AddSignalR(options => options.EnableDetailedErrors = true);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,6 +73,11 @@ namespace Tuto.API
             app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseMiddleware<AuthMiddleware>();
+
+            app.UseSignalR(route =>
+            {
+                route.MapHub<ChatHub>("/Hubs/TutoChat");
+            });
 
             app.UseMvc(routes =>
             {
