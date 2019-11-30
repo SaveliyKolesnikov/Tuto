@@ -70,13 +70,18 @@ namespace Tuto.API.Controllers
         private async Task<(bool isValid, string errorMessage)> IsMessageValid(ChatMessage message)
         {
             _userManager.TryGetUserId(User, out var appUserId);
-            var sender = await _userRepository.Read().FirstOrDefaultAsync(u => u.Id == appUserId);
+            var sender = await _userRepository.Read().Include(u => u.Roles).FirstOrDefaultAsync(u => u.Id == appUserId);
+            if (sender.Roles.Any(r => r.Name == AuthRoles.Teacher) && !await _entityRepository.Read()
+                    .AnyAsync(m => m.SenderId == message.SenderId && m.RecipientId == message.RecipientId))
+            {
+                return (false, "Teacher cannot send first message.");
+            } 
 
             if (message.SenderId != sender.Id)
                 return (false, "Fake sender id.");
 
             if (!await _userRepository.Read().AnyAsync(u => u.Id == message.RecipientId))
-                return (false, $"User with id {message.RecipientId} doesn't exist");
+                return (false, $"User with id {message.RecipientId} doesn't exist.");
 
             message.Text = new Regex(@"&nbsp;?").Replace(message.Text, " ");
             message.Text = HttpUtility.HtmlDecode(message.Text);
@@ -84,7 +89,7 @@ namespace Tuto.API.Controllers
                 return (false, "Message cannot be empty.");
 
             if (message.Text.Length > 4096)
-                return (false, "Message text length must be less then 4096");
+                return (false, "Message text length must be less then 4096.");
 
             return (true, string.Empty);
         }
