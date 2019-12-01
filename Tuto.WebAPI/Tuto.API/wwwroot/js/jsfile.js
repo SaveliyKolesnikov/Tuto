@@ -1,7 +1,8 @@
 var URL_PATH = "https://localhost:44367/";
 var URL_SERVER = "https://localhost:44367/";
 var LOGIN_PAGE = "log%20in.html";
-var PROFILE_PAGE = "profile-student.html";
+var PROFILE_PAGE_STUDENT = "profile-student.html";
+var PROFILE_PAGE_TEACHER = "profile-teacher.html";
 
 // login page js
 
@@ -33,11 +34,20 @@ function Render(){
 }
 //Check Login status
 function isNew(){
-	if(getUser(Login())["CityId"])
-		location.href = URL_PATH+PROFILE_PAGE;
+	if(getUser(Login())["IsProfileFilled"]){
+		if(getUser(Login())['TeacherInfo'])
+			location.href = URL_PATH+PROFILE_PAGE_TEACHER;
+		else
+			location.href = URL_PATH+PROFILE_PAGE_STUDENT;
+	}
 	else
 		return true;
 	return false;
+}
+function isTeacher(user){
+	if(user['TeacherInfo'])
+		return true;
+	return null;
 }
 function Login(){
 	var AUTHENTICATE = null;
@@ -66,6 +76,26 @@ function Logout(){
 			switch(status){
 				case 200:
 				location.href = URL_PATH+LOGIN_PAGE;
+				break;
+				default:
+				alert("ServerError");
+				break;
+			}
+		}
+	});
+}
+function DeleteTeacher(){
+	var id = getUser(Login())['TeacherInfo']["Id"];
+	$.ajax({
+		type: "DELETE", 
+		async: false,
+		dataType: 'json',
+		url: URL_SERVER+"Odata/TeacherInfos("+id+")",
+		success: function (data, textStatus, xhr) {
+			var status = xhr.status;
+			switch(status){
+				case 204:
+				DeleteUser();
 				break;
 				default:
 				alert("ServerError");
@@ -145,14 +175,17 @@ function getCityName(id){
 }
 function getUser(id){
 	var USR = null;
+	//https://localhost:44367/Odata/Users?$expand=TeacherInfo&$filter=Id%20eq%20a4460ac1-4414-ea11-b815-00155d0ace00
+	var url = URL_SERVER+"Odata/Users?$expand=TeacherInfo&$filter=Id%20eq%20"+id;
+	console.log(url);
 	$.ajax({
 		type: "GET", 
 		async: false,
 		dataType: 'json',
-		url: URL_SERVER+"Odata/Users("+id+")",
+		url: url,
 		success: function (data) {
-			console.log(data);
-			USR = data;
+			console.log(data['value'][0]);
+			USR = data['value'][0];
 		}
 	});
 	if(USR)
@@ -258,78 +291,44 @@ function toggle(el) {
 }
 // for TeacherReg js
 function TeacherReg(AUTHENTICATE){
-	var IdUser = document.getElementById('IdUser');
+	var idUser = s('#IdUser');
 	idUser.value = AUTHENTICATE;
 	setCities('#selectCity'); 
-	let daywork = $("#selectday").selectize({
+	let daywork = $("#selectDay").selectize({
 		plugins: ['remove_button'],
 		create: true,
 		sortField: 'text'
 	});
 	uploadPhoto("#photo","#canvas");
 }
-function sendForm_Teacher(){
-	var id = document.querySelector('#IdUser').value;
-	var name = document.querySelector('#Name').value;
-	var checkers = {
-		'student-home':$('#student-home').checked,
-		'tutor-home':$('#tutor-home').checked,
-		'another-location':$('#another-location').checked
-	};
-	var selectCity = document.querySelector('#selectCity>option');
-	var cityId = null;
-	var bio = document.querySelector('#additional').value;
-	var input_file = document.querySelector('#photo');
-	var base64 = document.querySelector('#canvas').toDataURL('image/jpeg',0.7);
-	if(!id||!name||!selectCity||!bio||!input_file||!base64){
-		alert("Something Wrong");
-		return;
+function sendForm_Teacher(id){
+	var userId = id;
+	var MinimumWage = s("#minPrice").value;
+	var daysArr = sa("#selectDay>option");
+	var PreferredDaysOfWeek = [];
+	daysArr.forEach(function (element) {
+		PreferredDaysOfWeek.push(element.value);
+	});
+	PreferredDaysOfWeek = PreferredDaysOfWeek.join(',');
+	console.log(PreferredDaysOfWeek);
+	var array_post = {
+		"UserId": userId,
+		"MinimumWage": MinimumWage,
+		"PreferredDaysOfWeek": PreferredDaysOfWeek
 	}
-	var url = encodeURI(URL_SERVER+"Odata/Cities?$filter=Name eq '"+selectCity.value+"'");
-	$.ajax({
-		type: "GET", 
-		async: false,
-		dataType: 'json',
-		url: url,
-		success: function (data) {
-			cityId = data['value'][0]['Id'];
-			console.log(cityId);
-		}
-	});
-
-
-
-
-
-	var array_post;
-	$.ajax({
-		type: "GET", 
-		async: false,
-		dataType: 'json',
-		url: URL_SERVER+"Odata/Users("+id+")",
-		success: function (data) {
-			array_post = data;
-			console.log(array_post);
-		}
-	});
-	array_post["CityId"] = cityId;
-	array_post["Picture"] = base64;
-	array_post["Name"] = name;
-	array_post["Address"] = JSON.stringify(checkers);
-	array_post["Description"] = bio;
 	console.log(array_post);
 	$.ajax({
-		type: "PUT",
+		type: "POST",
 		headers: {'Content-type':'application/json'},
 		dataType: 'json',
 		async: false,
 		data: JSON.stringify(array_post),
-		url: URL_SERVER+"Odata/Users("+id+")",
+		url: URL_SERVER+"/odata/TeacherInfos",
 		success: function (data, textStatus, xhr) {
 			var status = xhr.status;
 			switch(status){
-				case 204:
-				location.href = URL_PATH+"profile-student.html";
+				case 201:
+				location.href = URL_PATH+PROFILE_PAGE_TEACHER;
 				break;
 				default:
 				alert("ServerError");
@@ -338,6 +337,7 @@ function sendForm_Teacher(){
             //document.location.href="profile-student.html";
         }
     });
+
 }
 // for UserReg js
 function UserReg(AUTHENTICATE){
@@ -366,6 +366,7 @@ function sendForm_User(a){
 	}
 	var cityId = getCityId(selectCity.value);
 	var array_post = getUser(id);
+	array_post["IsProfileFilled"] = true;
 	array_post["CityId"] = cityId;
 	array_post["Picture"] = base64;
 	array_post["Name"] = name;
@@ -385,7 +386,7 @@ function sendForm_User(a){
 			switch(status){
 				case 204:
 				if(!a){
-					location.href = URL_PATH+"profile-student.html";
+					location.href = URL_PATH+PROFILE_PAGE_STUDENT;
 				}
 				break;
 				default:
@@ -396,7 +397,7 @@ function sendForm_User(a){
         }
     });
 	if(a){
-		TeacherReg(id);
+		sendForm_Teacher(id);
 	}
 }
 // for Profile teacher js
@@ -427,7 +428,7 @@ function ProfileTeacher(AUTHENTICATE){
 		toggle(first);
 		toggle(second);
 	});
-	let daywork = s("#selectday").selectize({
+	let daywork = $("#selectday").selectize({
 		plugins: ['remove_button'],
 		create: true,
 		sortField: 'text'
@@ -436,6 +437,19 @@ function ProfileTeacher(AUTHENTICATE){
 	block.scrollTop = block.scrollHeight;
 
 	var USR_DATA = getUser(AUTHENTICATE);
+	s("#place").innerText = getCityName(USR_DATA["CityId"]);
+	s("#additional_text").innerText = USR_DATA["Description"] 
+
+	var location = s("#location");
+	location.innerHTML = '';
+	for(var prop in USR_DATA["Address"]){
+		if(USR_DATA["Address"][prop]){
+			var span = document.createElement('span');
+			span.className = 'location text-nano';
+			span.innerText = prop;
+			location.appendChild(span);
+		}
+	}
 	var photos = sa(".User_Photo");
 	[].forEach.call(photos, function(photo){
 		photo.src = USR_DATA["Picture"];
@@ -443,7 +457,21 @@ function ProfileTeacher(AUTHENTICATE){
 	var names = sa(".User_Name");
 	[].forEach.call(names, function(name){
 		name.innerText = USR_DATA["Name"]+" "+USR_DATA["Surname"];
-	});    
+	}); 
+	var canvas = s("#canvas");
+	var ctx = canvas.getContext("2d");
+
+	var image = new Image();
+	image.onload = function() {
+		ctx.drawImage(image, 0, 0);
+	};
+	image.src =USR_DATA["Picture"];
+	// s("#change_name").value = USR_DATA["Name"];
+	// s("#change_surname").value = USR_DATA["Surname"];
+	// s("#change_additional").value = USR_DATA["Description"];
+	// s("#student-home").checked = USR_DATA["Address"]['Student`s home'];
+	// s("#tutor-home").checked = USR_DATA["Address"]['Tutors`s home'];
+	// s("#another-location").checked = USR_DATA["Address"]['Another location'];
 }
 // for Profile Student js
 function ProfileStudent(AUTHENTICATE){
@@ -473,6 +501,7 @@ function ProfileStudent(AUTHENTICATE){
 	s("#additional_text").innerText = USR_DATA["Description"] 
 
 	var location = s("#location");
+	location.innerHTML = '';
 	for(var prop in USR_DATA["Address"]){
 		if(USR_DATA["Address"][prop]){
 			var span = document.createElement('span');

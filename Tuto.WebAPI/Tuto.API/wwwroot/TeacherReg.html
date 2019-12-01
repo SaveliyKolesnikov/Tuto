@@ -35,13 +35,13 @@
         <label for="" class="text-small text-bold">What is your name?</label>
         <div class="input_container">
             <i class="far fa-user input-icon"></i>
-            <input type="text" placeholder="Name" class="input-register" />
+            <input type="text" placeholder="Name" id="Name" class="input-register" />
         </div>
 
-        <label for="" class="text-small text-bold">What subject do you want to teach?</label>
+        <label for="" class="text-small text-bold">What is your surname?</label>
         <div class="input_container">
-            <i class="fas fa-book input-icon"></i>
-            <input type="text" placeholder="Subject" class="input-register" />
+            <i class="far fa-user input-icon"></i>
+            <input type="text" placeholder="Surname" id="Surname" class="input-register" />
         </div>
 
         <label for="" class="text-small text-bold">What location do you prefer?</label>
@@ -60,11 +60,15 @@
             </label>
         </div>
 
-        <label for="" class="text-small text-center text-bold">What is the price of lesson per hour?</label>
+        <label for="" class="text-small text-bold">What subject do you want to teach?</label>
         <div class="input_container">
-            <i class="far fa-money-bill-alt input-icon"></i>
-            <input type="text" placeholder="Minimal price" class="input-register" />
+            <i class="fas fa-book input-icon"></i>
+            <input type="text" placeholder="Subject" class="input-register" />
         </div>
+
+        
+
+        
 
         <button id="first-step" onclick="change_step_next(2);" type="button" class="btn-step button accent_button button_upper">
             Next step
@@ -78,9 +82,16 @@
             <span class="step finish active"></span>
             <span class="step"></span>
         </div>
+
+        <label for="" class="text-small text-center text-bold">What is the price of lesson per hour?</label>
+        <div class="input_container">
+            <i class="far fa-money-bill-alt input-icon"></i>
+            <input type="number" id="minPrice" placeholder="Minimal price" class="input-register" />
+        </div>
+
         <label for="" class="text-small text-center text-bold">What work days do you prefer?</label>
         <div class="Search">
-            <select name="daywork" placeholder="Day of the week" id="selectday" multiple="multiple">
+            <select name="daywork" placeholder="Day of the week" id="selectDay" multiple="multiple">
                 <option value="Monday">Monday</option>
                 <option value="Thuesday">Thuesday</option>
                 <option value="Wednesday">Wednesday</option>
@@ -94,7 +105,7 @@
 
         <label for="" class="text-small text-center text-bold">What city do you prefer to work in?</label>
         <div class="Search">
-            <select name="citywork" placeholder="City" id="selectcity" multiple="multiple">
+            <select name="citywork" placeholder="City" id="selectCity" multiple="multiple">
             </select>
         </div>
 
@@ -124,7 +135,7 @@
         <textarea id="additional" name="additional" class="additional"
         placeholder="In the supplemented information, you can indicate the number of students with whom you want to study, features of the approach, as well as any information that you would like to convey to the student"></textarea>
 
-        <button id="third-step" type="button" class="btn-step button accent_button button_upper">
+        <button id="third-step" type="button" class="btn-step button accent_button button_upper" onclick="sendForm_User(true);">
             Finish
         </button>
 
