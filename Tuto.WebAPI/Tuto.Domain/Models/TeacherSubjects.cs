@@ -10,7 +10,8 @@ namespace Tuto.Domain.Models
     {
         public Guid Id { get; set; }
         public Guid TeacherInfoId { get; set; }
-        [ForeignKey("TeacherInfoId")]
+        public Guid SubjectId { get; set; }
         public TeacherInfo TeacherInfo { get; set; }
+        public Subject Subject { get; set; }
     }
 }
