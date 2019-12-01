@@ -19,13 +19,15 @@ namespace Tuto.API.Controllers
     [AuthFilter]
     public class ChatMessagesController : ODataControllerBase<ChatMessage>
     {
+        private readonly IChatManager _chatManager;
         private readonly IHubContext<ChatHub> _chatHub;
         private readonly IRepository<User> _userRepository;
         private readonly IAppUserManager _userManager;
 
-        public ChatMessagesController(IRepository<ChatMessage> entityRepository,  
+        public ChatMessagesController(IRepository<ChatMessage> entityRepository, IChatManager chatManager,
             IHubContext<ChatHub> chatHub, IRepository<User> userRepository, IAppUserManager userManager) : base(entityRepository)
         {
+            _chatManager = chatManager;
             _chatHub = chatHub;
             _userRepository = userRepository;
             _userManager = userManager;
@@ -71,17 +73,17 @@ namespace Tuto.API.Controllers
         {
             _userManager.TryGetUserId(User, out var appUserId);
             var sender = await _userRepository.Read().Include(u => u.Roles).FirstOrDefaultAsync(u => u.Id == appUserId);
-            if (sender.Roles.Any(r => r.Name == AuthRoles.Teacher) && !await _entityRepository.Read()
-                    .AnyAsync(m => m.SenderId == message.SenderId && m.RecipientId == message.RecipientId))
-            {
-                return (false, "Teacher cannot send first message.");
-            } 
 
             if (message.SenderId != sender.Id)
                 return (false, "Fake sender id.");
 
             if (!await _userRepository.Read().AnyAsync(u => u.Id == message.RecipientId))
                 return (false, $"User with id {message.RecipientId} doesn't exist.");
+
+            if (sender.Roles.Any(r => r.Name == AuthRoles.Teacher) && !await _chatManager.HaveAnyCommonMessages(sender.Id, message.RecipientId))
+            {
+                return (false, "Teacher cannot send first message.");
+            }
 
             message.Text = new Regex(@"&nbsp;?").Replace(message.Text, " ");
             message.Text = HttpUtility.HtmlDecode(message.Text);
