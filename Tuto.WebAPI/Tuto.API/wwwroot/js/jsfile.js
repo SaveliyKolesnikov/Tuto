@@ -1,14 +1,24 @@
 var URL_PATH = "https://localhost:44367/";
 var URL_SERVER = "https://localhost:44367/";
 var LOGIN_PAGE = "log%20in.html";
+var CHOOSE_ROLE = "ChooseRole.html";
 var PROFILE_PAGE_STUDENT = "profile-student.html";
 var PROFILE_PAGE_TEACHER = "profile-teacher.html";
 
 // login page js
-
 function login_page(){
 	var url = URL_SERVER + "oauth/authorize?returnUrl=" + URL_SERVER+"ChooseRole.html";
 	document.querySelector("#login_url").href = url;
+}
+function playloaderOn(){
+	var play = s("#hellopreloader_preload");
+	play.style.opacity = "1";
+	play.style.display = "block";
+}
+function playloaderOff(){
+	var play = s("#hellopreloader_preload");
+	play.style.opacity = "0.5";
+	play.style.display = "none";
 }
 function Render(){
 	var play = document.createElement("div");
@@ -43,6 +53,10 @@ function isNew(){
 	else
 		return true;
 	return false;
+}
+function isProfileFilled(){
+	if(!getUser(Login())["IsProfileFilled"])
+		location.href = URL_PATH+CHOOSE_ROLE;
 }
 function isTeacher(user){
 	if(user['TeacherInfo'])
@@ -85,7 +99,9 @@ function Logout(){
 	});
 }
 function DeleteTeacher(){
+	playloaderOn();
 	var id = getUser(Login())['TeacherInfo']["Id"];
+	deleteTeachersSubject(getUser(Login())['TeacherInfo']["TeacherSubjects"])
 	$.ajax({
 		type: "DELETE", 
 		async: false,
@@ -103,6 +119,25 @@ function DeleteTeacher(){
 			}
 		}
 	});
+}
+function getUser(id){
+	var USR = null;
+	//https://localhost:44367/Odata/Users?$expand=TeacherInfo&$filter=Id%20eq%20a4460ac1-4414-ea11-b815-00155d0ace00
+	var url = URL_SERVER+"Odata/Users?$expand=TeacherInfo($expand=TeacherSubjects)&$filter=Id%20eq%20"+id;
+	console.log(url);
+	$.ajax({
+		type: "GET", 
+		async: false,
+		dataType: 'json',
+		url: url,
+		success: function (data) {
+			console.log(data['value'][0]);
+			USR = data['value'][0];
+		}
+	});
+	if(USR)
+		USR["Address"] = JSON.parse(USR["Address"]);
+	return USR;
 }
 function DeleteUser(){
 	var id = Login();
@@ -173,25 +208,6 @@ function getCityName(id){
 	});
 	return city;
 }
-function getUser(id){
-	var USR = null;
-	//https://localhost:44367/Odata/Users?$expand=TeacherInfo&$filter=Id%20eq%20a4460ac1-4414-ea11-b815-00155d0ace00
-	var url = URL_SERVER+"Odata/Users?$expand=TeacherInfo&$filter=Id%20eq%20"+id;
-	console.log(url);
-	$.ajax({
-		type: "GET", 
-		async: false,
-		dataType: 'json',
-		url: url,
-		success: function (data) {
-			console.log(data['value'][0]);
-			USR = data['value'][0];
-		}
-	});
-	if(USR)
-		USR["Address"] = JSON.parse(USR["Address"]);
-	return USR;
-}
 function setCities(id){
 	$.ajax({
 		type: "GET", 
@@ -221,6 +237,188 @@ function setCities(id){
 		labelField: 'Name',
 		searchField: ['Name']
 
+	});
+}
+function getSubjectId(name){
+	var subject = null;
+	var url = encodeURI(URL_SERVER+"Odata/Subjects?$filter=Name eq '"+name+"'");
+	$.ajax({
+		type: "GET", 
+		async: false,
+		dataType: 'json',
+		url: url,
+		success: function (data) {
+			console.log(data);
+			subject = data['value'][0]['Id'];
+			
+		}
+	});
+	return subject;
+}
+function getSubjectName(id){
+	var subject = null;
+	var url = encodeURI(URL_SERVER+"Odata/Subjects("+id+")");
+	$.ajax({
+		type: "GET", 
+		async: false,
+		dataType: 'json',
+		url: url,
+		success: function (data) {
+			console.log(data);
+			subject = data['Name'];
+			
+		}
+	});
+	return subject;
+}
+function setSubjectsForm(id){
+	$.ajax({
+		type: "GET", 
+		async: false,
+		dataType: 'json',
+		url: URL_SERVER+"odata/Subjects",
+		success: function (data) {
+			console.log(data);
+			var obj = data;
+			var selectsubject = s(id);
+			obj['value'].forEach(function (element) {
+				var name = element['Name'];
+				var id = element['Id']
+				var p = document.createElement("option");
+				p.value = name;
+				p.setAttribute("id",id);
+				selectsubject.appendChild(p);
+			});
+		}
+	});
+	let subjectStudy = $(id).selectize({
+		plugins: ['remove_button'],
+		create: true,
+		maxItems: 3,
+		sortField: 'Name',
+		valueField: 'Name',
+		labelField: 'Name',
+		searchField: ['Name']
+
+	});
+}
+function setSubjectsProfile(id){
+	var selectsubject = s(id);
+	var arr = [];
+	var userSubjects = getUser(Login())["TeacherInfo"]["TeacherSubjects"];
+	userSubjects.forEach(function (element) {
+		arr.push(getSubjectName(element['SubjectId']));
+	});
+	selectsubject.innerText = arr.join(", ");	
+}
+function setTeachersSubject(subjects,teacherId){
+	var flag = false;
+	subjects.forEach(function (elementId) {
+		var arr = {
+			"TeacherInfoId": teacherId,
+			"SubjectId": elementId
+		}
+		$.ajax({
+			type: "POST",
+			headers: {'Content-type':'application/json'},
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify(arr),
+			url: URL_SERVER+"/odata/TeacherSubjects",
+			success: function (data, textStatus, xhr) {
+				var status = xhr.status;
+				switch(status){
+					case 201:
+					flag = true;
+					break;
+					default:
+					console.log("ServerError");
+					break;
+				}
+
+			}
+		});
+	});	
+	if(flag)
+		location.href = URL_PATH+PROFILE_PAGE_TEACHER;
+}
+function deleteTeachersSubject(TeacherSubjects){
+	TeacherSubjects.forEach(function (element) {
+		var subjectId = element["Id"];
+		$.ajax({
+			type: "DELETE", 
+			async: false,
+			dataType: 'json',
+			url: URL_SERVER+"Odata/TeacherSubjects("+subjectId+")",
+			success: function (data, textStatus, xhr) {
+				var status = xhr.status;
+				switch(status){
+					case 204:
+					console.log("deleting - ok");
+					break;
+					default:
+					console.log("deleting - error");
+					break;
+				}
+			}
+		});
+	});
+}
+function setTeacherInfo(user,MinimumWage,PreferredDaysOfWeek,subjectsIds){
+	var array_post = {
+		"UserId": user["Id"],
+		"MinimumWage": MinimumWage,
+		"PreferredDaysOfWeek": PreferredDaysOfWeek
+	}
+	console.log(array_post);
+	$.ajax({
+		type: "POST",
+		headers: {'Content-type':'application/json'},
+		dataType: 'json',
+		async: false,
+		data: JSON.stringify(array_post),
+		url: URL_SERVER+"/odata/TeacherInfos",
+		success: function (data, textStatus, xhr) {
+			var status = xhr.status;
+			switch(status){
+				case 201:
+				setTeachersSubject(subjectsIds,getUser(user["Id"])["TeacherInfo"]["Id"]);
+				// location.href = URL_PATH+PROFILE_PAGE_TEACHER;
+				break;
+				default:
+				alert("ServerError");
+				break;
+			}
+
+		}
+	});
+}
+function updateTeacherInfo(user,MinimumWage,PreferredDaysOfWeek,subjectsIds){
+	var array_post = {
+		"UserId": user["Id"],
+		"MinimumWage": MinimumWage,
+		"PreferredDaysOfWeek": PreferredDaysOfWeek
+	}
+	$.ajax({
+		type: "PUT",
+		headers: {'Content-type':'application/json'},
+		dataType: 'json',
+		async: false,
+		data: JSON.stringify(array_post),
+		url: URL_SERVER+"Odata/TeacherInfos("+user["TeacherInfo"]["Id"]+")",
+		success: function (data, textStatus, xhr) {
+			var status = xhr.status;
+			switch(status){
+				case 204:
+				deleteTeachersSubject(user["TeacherInfo"]["TeacherSubjects"]);
+				setTeachersSubject(subjectsIds,user["TeacherInfo"]["Id"]);
+				break;
+				default:
+				alert("ServerError");
+				break;
+			}
+
+		}
 	});
 }
 function uploadPhoto(upload,canvas){
@@ -294,6 +492,7 @@ function TeacherReg(AUTHENTICATE){
 	var idUser = s('#IdUser');
 	idUser.value = AUTHENTICATE;
 	setCities('#selectCity'); 
+	setSubjectsForm('#selectSubject');
 	let daywork = $("#selectDay").selectize({
 		plugins: ['remove_button'],
 		create: true,
@@ -302,6 +501,7 @@ function TeacherReg(AUTHENTICATE){
 	uploadPhoto("#photo","#canvas");
 }
 function sendForm_Teacher(id){
+	playloaderOn();
 	var userId = id;
 	var MinimumWage = s("#minPrice").value;
 	var daysArr = sa("#selectDay>option");
@@ -309,35 +509,19 @@ function sendForm_Teacher(id){
 	daysArr.forEach(function (element) {
 		PreferredDaysOfWeek.push(element.value);
 	});
+
+	var selectSubject = sa('#selectSubject>option');
+	var subjectsIds = [];
+	selectSubject.forEach(function (element) {
+		var name = element.value;
+		subjectsIds.push(getSubjectId(element.value));
+	});
+	
+
 	PreferredDaysOfWeek = PreferredDaysOfWeek.join(',');
 	console.log(PreferredDaysOfWeek);
-	var array_post = {
-		"UserId": userId,
-		"MinimumWage": MinimumWage,
-		"PreferredDaysOfWeek": PreferredDaysOfWeek
-	}
-	console.log(array_post);
-	$.ajax({
-		type: "POST",
-		headers: {'Content-type':'application/json'},
-		dataType: 'json',
-		async: false,
-		data: JSON.stringify(array_post),
-		url: URL_SERVER+"/odata/TeacherInfos",
-		success: function (data, textStatus, xhr) {
-			var status = xhr.status;
-			switch(status){
-				case 201:
-				location.href = URL_PATH+PROFILE_PAGE_TEACHER;
-				break;
-				default:
-				alert("ServerError");
-				break;
-			}
-            //document.location.href="profile-student.html";
-        }
-    });
-
+	setTeacherInfo(getUser(id),MinimumWage,PreferredDaysOfWeek,subjectsIds);
+	playloaderOff();
 }
 // for UserReg js
 function UserReg(AUTHENTICATE){
@@ -348,6 +532,7 @@ function UserReg(AUTHENTICATE){
 	uploadPhoto("#photo","#canvas");
 }
 function sendForm_User(a){
+	playloaderOn();
 	var id = s('#IdUser').value;
 	var name = s('#Name').value;
 	var surname = s('#Surname').value;
@@ -393,35 +578,34 @@ function sendForm_User(a){
 				alert("ServerError");
 				break;
 			}
-            //document.location.href="profile-student.html";
-        }
-    });
+
+		}
+	});
 	if(a){
 		sendForm_Teacher(id);
 	}
+	playloaderOff();
 }
 // for Profile teacher js
 function ProfileTeacher(AUTHENTICATE){
+	isProfileFilled();
 	setCities('#selectCity');
+	setSubjectsForm('#selectSubject');
+	setSubjectsProfile("#subjectsProfile");
 	uploadPhoto("#photo","#canvas");
 	var modal = s("#modal2"),
 	modalOverlay = s("#modal-overlay2"),
 	closeButton = s("#close-button2");
 	let openButton = s(".edit");
-
-
 	closeButton.addEventListener("click", function () {
 		toggle(modal);
 		toggle(modalOverlay);
 	});
-
 	openButton.addEventListener("click", function () {
 		toggle(modal);
 		toggle(modalOverlay);
 	});
-
 	let comment = s("#profile-comment");
-
 	comment.addEventListener("click", function () {
 		let first = s(".first-slide");
 		let second = s(".second-slide");
@@ -430,8 +614,7 @@ function ProfileTeacher(AUTHENTICATE){
 	});
 	let daywork = $("#selectday").selectize({
 		plugins: ['remove_button'],
-		create: true,
-		sortField: 'text'
+		create: true
 	});
 	var block = s(".chat");
 	block.scrollTop = block.scrollHeight;
@@ -439,7 +622,7 @@ function ProfileTeacher(AUTHENTICATE){
 	var USR_DATA = getUser(AUTHENTICATE);
 	s("#place").innerText = getCityName(USR_DATA["CityId"]);
 	s("#additional_text").innerText = USR_DATA["Description"] 
-
+	s("#price").innerText = USR_DATA["TeacherInfo"]["MinimumWage"];
 	var location = s("#location");
 	location.innerHTML = '';
 	for(var prop in USR_DATA["Address"]){
@@ -450,6 +633,10 @@ function ProfileTeacher(AUTHENTICATE){
 			location.appendChild(span);
 		}
 	}
+	var dates = USR_DATA["TeacherInfo"]["PreferredDaysOfWeek"].split(", ");
+	dates.forEach(function (element) {
+		$("[name='"+element+"']").addClass('active').removeClass('passive');
+	});
 	var photos = sa(".User_Photo");
 	[].forEach.call(photos, function(photo){
 		photo.src = USR_DATA["Picture"];
@@ -466,15 +653,85 @@ function ProfileTeacher(AUTHENTICATE){
 		ctx.drawImage(image, 0, 0);
 	};
 	image.src =USR_DATA["Picture"];
-	// s("#change_name").value = USR_DATA["Name"];
-	// s("#change_surname").value = USR_DATA["Surname"];
-	// s("#change_additional").value = USR_DATA["Description"];
-	// s("#student-home").checked = USR_DATA["Address"]['Student`s home'];
-	// s("#tutor-home").checked = USR_DATA["Address"]['Tutors`s home'];
-	// s("#another-location").checked = USR_DATA["Address"]['Another location'];
+	s("#change_name").value = USR_DATA["Name"];
+	s("#change_surname").value = USR_DATA["Surname"];
+	s("#change_additional").value = USR_DATA["Description"];
+	s("#change_minimalprice").value = USR_DATA["TeacherInfo"]["MinimumWage"];
+	s("#student-home").checked = USR_DATA["Address"]['Student`s home'];
+	s("#tutor-home").checked = USR_DATA["Address"]['Tutors`s home'];
+	s("#another-location").checked = USR_DATA["Address"]['Another location'];
+}
+function ChangeProfileTeacher(AUTHENTICATE){
+	playloaderOn();
+	var USR_DATA = getUser(AUTHENTICATE);
+	var id = AUTHENTICATE;
+	var name = s('#change_name').value;
+	var surname = s('#change_surname').value;
+	var checkers = {
+		'Student`s home':s('#student-home').checked,
+		'Tutors`s home':s('#tutor-home').checked,
+		'Another location':s('#another-location').checked
+	};
+	var selectCity = s('#selectCity>option');
+	var bio = s('#change_additional').value;
+	var input_file = s('#photo');
+	var base64 = s('#canvas').toDataURL('image/jpeg',0.7);
+
+	var MinimumWage = s("#change_minimalprice").value;
+	var daysArr = sa("#selectday>option");
+	var PreferredDaysOfWeek = [];
+	daysArr.forEach(function (element) {
+		PreferredDaysOfWeek.push(element.value);
+	});
+
+	var selectSubject = sa('#selectSubject>option');
+	var subjectsIds = [];
+	selectSubject.forEach(function (element) {
+		var name = element.value;
+		subjectsIds.push(getSubjectId(element.value));
+	});
+	
+
+	PreferredDaysOfWeek = PreferredDaysOfWeek.join(',');
+	console.log(PreferredDaysOfWeek);
+
+	if(!id||!name||!surname||!selectCity||!bio||!input_file||!base64){
+		alert("Something Wrong");
+		return;
+	}
+	var cityId = getCityId(selectCity.value);
+	USR_DATA["CityId"] = cityId;
+	USR_DATA["Picture"] = base64;
+	USR_DATA["Name"] = name;
+	USR_DATA["Surname"] = surname;
+	USR_DATA["Address"] = JSON.stringify(checkers);
+	USR_DATA["Description"] = bio;
+	console.log(USR_DATA);
+	$.ajax({
+		type: "PUT",
+		headers: {'Content-type':'application/json'},
+		dataType: 'json',
+		async: false,
+		data: JSON.stringify(USR_DATA),
+		url: URL_SERVER+"Odata/Users("+id+")",
+		success: function (data, textStatus, xhr) {
+			var status = xhr.status;
+			switch(status){
+				case 204:
+				updateTeacherInfo(USR_DATA,MinimumWage,PreferredDaysOfWeek,subjectsIds);
+				break;
+				default:
+				alert("ServerError");
+				break;
+			}
+
+		}
+	});
+	playloaderOff();
 }
 // for Profile Student js
 function ProfileStudent(AUTHENTICATE){
+	isProfileFilled();
 	setCities('#selectCity');
 	uploadPhoto("#photo","#canvas");
 
@@ -545,8 +802,7 @@ function ProfileStudent(AUTHENTICATE){
     // cityDiv.setAttribute("class", "item");
     // cityDiv.innerHTML = cityName + '<a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a>';
     // selectDiv.appendChild(cityDiv);
-
-
+}
 //<option value="Aleksandrovsk" selected="selected">Aleksandrovsk</option>
 // <div class="selectize-input items has-options has-items not-full">
 //     <div data-value="Alupka" class="item">
@@ -555,8 +811,8 @@ function ProfileStudent(AUTHENTICATE){
 //     </div>
 //     <input type="text" autocomplete="off" tabindex="" style="width: 4px; opacity: 1; position: relative; left: 0px;">
 // </div>
-}
 function ChangeProfileStudent(AUTHENTICATE){
+	playloaderOn();
 	var USR_DATA = getUser(AUTHENTICATE);
 	var id = AUTHENTICATE;
 	var name = s('#change_name').value;
@@ -593,13 +849,14 @@ function ChangeProfileStudent(AUTHENTICATE){
 			var status = xhr.status;
 			switch(status){
 				case 204:
-				location.href = URL_PATH+"profile-student.html";
+				location.href = URL_PATH+PROFILE_PAGE_STUDENT;
 				break;
 				default:
 				alert("ServerError");
 				break;
 			}
-            //document.location.href="profile-student.html";
-        }
-    });
+
+		}
+	});
+	playloaderOff();
 }

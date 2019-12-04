@@ -112,7 +112,7 @@
                         <div class="">
                             <p class="text-small">Teacher</p>
                             <p class="text-medium User_Name">Katie Atakulova</p>
-                            <p class="text-nano">English,Deutsch</p>
+                            <p class="text-nano" id="subjectsProfile">English,Deutsch</p>
                             <div id="location">
                                 <span class="location text-nano">Student`s home</span><span
                                 class="location text-nano">Another location</span>
@@ -169,13 +169,13 @@
             </div>
             <div class="wrap">
                 <div class="profile-main__flex">
-                    <p class="text-mini active">Mo</p>
-                    <p class="text-mini passive">Tu</p>
-                    <p class="text-mini active">We</p>
-                    <p class="text-mini active">Th</p>
-                    <p class="text-mini passive">Fr</p>
-                    <p class="text-mini active">Sa</p>
-                    <p class="text-mini passive">Su</p>
+                    <p class="text-mini passive" name="Monday">Mo</p>
+                    <p class="text-mini passive" name="Tuesday">Tu</p>
+                    <p class="text-mini passive" name="Wednesday">We</p>
+                    <p class="text-mini passive" name="Thursday">Th</p>
+                    <p class="text-mini passive" name="Friday">Fr</p>
+                    <p class="text-mini passive" name="Saturday">Sa</p>
+                    <p class="text-mini passive" name="Sunday">Su</p>
                 </div>
             </div>
             <div class="wrap">
@@ -597,7 +597,7 @@
                                     <div class="modal edit-form" id="modal2" aria-hidden="true" style="display: none;" aria-labelledby="modalTitle"
                                     aria-describedby="modalDescription" role="dialog">
                                     <div class="modal-guts" role="document">
-                                        <form action="">
+                                        <form action="" onsubmit="return false;">
                                             <svg class="cancel" id="close-button2" width="20" height="20" viewBox="0 0 20 20" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path fill-rule="evenodd" clip-rule="evenodd"
@@ -616,7 +616,11 @@
                                         <hr class="edit-line">
                                         <div class="input_container">
                                             <i class="far fa-user input-icon" aria-hidden="true"></i>
-                                            <input type="text" placeholder="Name" class="input-register User_Name">
+                                            <input type="text" id="change_name" placeholder="Name" class="input-register">
+                                        </div>
+                                        <div class="input_container">
+                                            <i class="far fa-user input-icon" aria-hidden="true"></i>
+                                            <input type="text" id="change_surname" placeholder="Surame" class="input-register">
                                         </div>
                                         <div class="Search">
                                             <select name="citywork" placeholder="City" id="selectCity" multiple="multiple"></select>
@@ -636,9 +640,13 @@
                                             </label>
                                         </div>
                                         <div class="Search">
+                                            <select name="subjectwork" placeholder="Subject" id="selectSubject" multiple="multiple">
+                                            </select>
+                                        </div>
+                                        <div class="Search">
                                             <select name="daywork" placeholder="Day of the week" id="selectday" multiple="multiple">
                                                 <option value="Monday">Monday</option>
-                                                <option value="Thuesday">Thuesday</option>
+                                                <option value="Tuesday">Tuesday</option>
                                                 <option value="Wednesday">Wednesday</option>
                                                 <option value="Thursday">Thursday</option>
                                                 <option value="Friday">Friday</option>
@@ -649,16 +657,16 @@
 
                                         <div class="input_container">
                                             <i class="far fa-money-bill-alt input-icon"></i>
-                                            <input type="number" placeholder="Minimal price" class="input-register" />
+                                            <input type="number" id="change_minimalprice" placeholder="Minimal price" class="input-register" />
                                         </div>
-                                        <textarea id="additional" name="additional" class="additional"
+                                        <textarea id="change_additional" name="additional" class="additional"
                                         placeholder="In the supplemented information, you can indicate the number of students with whom you want to study, features of the approach, as well as any information that you would like to convey to the student"></textarea>
 
 
 
 
 
-                                        <button class="button accent_button button_upper" type="submit" id="edit">
+                                        <button class="button accent_button button_upper" onclick="ChangeProfileTeacher(Login());" type="submit" id="edit">
                                             Save
                                         </button>
 
