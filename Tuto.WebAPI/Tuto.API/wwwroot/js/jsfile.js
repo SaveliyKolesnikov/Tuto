@@ -4,6 +4,7 @@ var LOGIN_PAGE = "log%20in.html";
 var CHOOSE_ROLE = "ChooseRole.html";
 var PROFILE_PAGE_STUDENT = "profile-student.html";
 var PROFILE_PAGE_TEACHER = "profile-teacher.html";
+var TEACHER = "teacher.html?id=";
 
 // login page js
 function login_page(){
@@ -61,7 +62,7 @@ function isProfileFilled(){
 function isTeacher(user){
 	if(user['TeacherInfo'])
 		return true;
-	return null;
+	return false;
 }
 function Login(){
 	var AUTHENTICATE = null;
@@ -101,7 +102,7 @@ function Logout(){
 function DeleteTeacher(){
 	playloaderOn();
 	var id = getUser(Login())['TeacherInfo']["Id"];
-	deleteTeachersSubject(getUser(Login())['TeacherInfo']["TeacherSubjects"])
+	deleteTeachersSubject(getUser(Login())['TeacherInfo']["TeacherSubjects"]);
 	$.ajax({
 		type: "DELETE", 
 		async: false,
@@ -175,6 +176,131 @@ function DeleteUser(){
 			}
 		}
 	});
+}
+function getAllTeachers(){
+	var arr = [];
+	//https://localhost:44367/Odata/Users?$expand=TeacherInfo($expand=TeacherSubjects)&$filter=(TeacherInfo+ne+null)
+	var url = URL_SERVER+"Odata/Users?$expand=TeacherInfo($expand=TeacherSubjects)&$filter=(TeacherInfo+ne+null)";
+	$.ajax({
+		type: "GET", 
+		async: false,
+		dataType: 'json',
+		url: url,
+		success: function (data) {
+			data['value'].forEach(function (user) {
+				user["Address"] = JSON.parse(user["Address"]);
+				arr.push(user);
+			});
+		}
+	});
+	return arr;
+}
+function renderAllTeachers(teachers,block){
+	teachers.forEach(function (teacher) {
+
+		var tutor_result = document.createElement("div");
+		tutor_result.classList.add('tutor-result');
+		tutor_result.setAttribute("id", teacher["Id"]);
+		block.appendChild(tutor_result);
+		// ====================
+		var profile_head = document.createElement("div");
+		profile_head.classList.add('profile-head');
+		tutor_result.appendChild(profile_head);
+		// ====================
+		var img_profile_maxi = document.createElement("div");
+		img_profile_maxi.classList.add('img_profile_maxi');
+		profile_head.appendChild(img_profile_maxi);
+		// ====================
+		var img = document.createElement("img");
+		img.setAttribute("src", teacher["Picture"]);
+		img_profile_maxi.appendChild(img);
+		// ====================
+		var info_profile_maxi = document.createElement("div");
+		info_profile_maxi.classList.add('info_profile_maxi');
+		profile_head.appendChild(info_profile_maxi);
+		// ====================
+		var p_subjects = document.createElement("p");
+		p_subjects.classList.add('text-nano');
+		var arr = [];
+		var userSubjects = teacher["TeacherInfo"]["TeacherSubjects"];
+		userSubjects.forEach(function (element) {
+			arr.push(getSubjectName(element['SubjectId']));
+		});
+		p_subjects.innerText = arr.join(", ");
+		info_profile_maxi.appendChild(p_subjects);
+		// ====================
+		var p_fio = document.createElement("p");
+		p_fio.classList.add('text-medium');
+		p_fio.innerText = teacher["Name"] + " " + teacher["Surname"];
+		info_profile_maxi.appendChild(p_fio);
+		// ====================
+		var div_city = document.createElement("div");
+		div_city.innerHTML = "<span class='icon-city'></span>"
+		info_profile_maxi.appendChild(div_city);
+		// ====================
+		var span_city = document.createElement("span");
+		span_city.classList.add("text-small");
+		span_city.innerHTML = getCityName(teacher["CityId"]);
+		div_city.appendChild(span_city);
+		// ====================
+		var p_about = document.createElement("p");
+		p_about.classList.add('text-nano');
+		p_about.classList.add('add-text');
+		p_about.innerText = teacher["Description"];
+		info_profile_maxi.appendChild(p_about);
+		// ====================
+		var tutor_right = document.createElement("div");
+		tutor_right.classList.add('tutor-right');
+		tutor_right.innerHTML = '<div><div class="page__group"><div class="rating"><input type="radio" name="rating-star" class="rating__control" id="rc1"><input type="radio" name="rating-star" class="rating__control" id="rc2"><input type="radio" name="rating-star" class="rating__control" id="rc3"><input type="radio" name="rating-star" class="rating__control" id="rc4"><input type="radio" name="rating-star" class="rating__control" id="rc5"><label for="rc1" class="rating__item"><svg class="rating__star"><use xlink:href="#star"></use></svg><span class="rating__label">1</span></label><label for="rc2" class="rating__item"><svg class="rating__star"><use xlink:href="#star"></use></svg><span class="rating__label">2</span></label><label for="rc3" class="rating__item"><svg class="rating__star"><use xlink:href="#star"></use></svg><span class="rating__label">3</span></label><label for="rc4" class="rating__item"><svg class="rating__star"><use xlink:href="#star"></use></svg><span class="rating__label">4</span></label><label for="rc5" class="rating__item"><svg class="rating__star"><use xlink:href="#star"></use></svg><span class="rating__label">5</span></label></div></div><svg style="display: none" width="20" height="19" viewBox="0 0 20 19" fill="none"xmlns="http://www.w3.org/2000/svg"><path id="star" d="M10 0.809018L12.0074 6.98708L12.0635 7.15983H12.2451H18.7411L13.4858 10.9781L13.3388 11.0848L13.3949 11.2576L15.4023 17.4357L10.1469 13.6174L10 13.5106L9.85305 13.6174L4.59768 17.4357L6.60505 11.2576L6.66118 11.0848L6.51423 10.9781L1.25886 7.15983H7.75486H7.9365L7.99262 6.98708L10 0.809018Z" </div>';
+		tutor_result.appendChild(tutor_right);
+		// ====================
+		var p_price = document.createElement("p");
+		p_price.classList.add('text-medium');
+		p_price.innerText = "$"+teacher["TeacherInfo"]["MinimumWage"]+"/hour";
+		tutor_right.appendChild(p_price);
+		// ====================
+		var button_view = document.createElement("button");
+		button_view.classList.add('button');
+		button_view.classList.add('accent_button');
+		button_view.classList.add('button_upper');
+		button_view.setAttribute("onclick","location.href='"+URL_PATH+TEACHER+teacher["Id"]+"';");
+		button_view.innerText = "View profile";
+		tutor_right.appendChild(button_view);
+
+
+		//   <div class="tutor-result">
+        //     <div class="profile-head">
+        //         <div class="img_profile_maxi">
+        //             <img src="img/Profile.JPG" alt="" class="" />
+        //         </div>
+        //         <div class="">
+        //             <p class="text-nano">English,Deutsch</p>
+        //             <p class="text-medium">Katie Atakulova</p>
+        //             <div>
+        //                 <span class="icon-city"></span>
+        //                 <span class="text-small">Kharkiv</span>
+        //             </div>
+        //             <p class="text-nano add-text">In the supplemented information, you can indicate the number of
+        //                 students
+        //                 with whom you want to study, features of the approach, as well as any information that you
+        //             would like to convey to the student</p>
+        //         </div>
+        //     </div>
+        //     <div class="tutor-right">
+        //         <div><div class="page__group"><div class="rating"><input type="radio" name="rating-star" class="rating__control" id="rc1" checked><input type="radio" name="rating-star" class="rating__control" id="rc2"><input type="radio" name="rating-star" class="rating__control" id="rc3"><input type="radio" name="rating-star" class="rating__control" id="rc4"><input type="radio" name="rating-star" class="rating__control" id="rc5"><label for="rc1" class="rating__item"><svg class="rating__star"><use xlink:href="#star"></use></svg><span class="rating__label">1</span></label><label for="rc2" class="rating__item"><svg class="rating__star"><use xlink:href="#star"></use></svg><span class="rating__label">2</span></label><label for="rc3" class="rating__item"><svg class="rating__star"><use xlink:href="#star"></use></svg><span class="rating__label">3</span></label><label for="rc4" class="rating__item"><svg class="rating__star"><use xlink:href="#star"></use></svg><span class="rating__label">4</span></label><label for="rc5" class="rating__item"><svg class="rating__star"><use xlink:href="#star"></use></svg><span class="rating__label">5</span></label></div></div><svg style="display: none" width="20" height="19" viewBox="0 0 20 19" fill="none"xmlns="http://www.w3.org/2000/svg"><path id="star" d="M10 0.809018L12.0074 6.98708L12.0635 7.15983H12.2451H18.7411L13.4858 10.9781L13.3388 11.0848L13.3949 11.2576L15.4023 17.4357L10.1469 13.6174L10 13.5106L9.85305 13.6174L4.59768 17.4357L6.60505 11.2576L6.66118 11.0848L6.51423 10.9781L1.25886 7.15983H7.75486H7.9365L7.99262 6.98708L10 0.809018Z" /></s</div>
+        //         <p class="text-medium">$30/hour</p>
+        //         <button class="button accent_button button_upper">
+        //             Send message
+        //         </button>
+        //     </div>
+        // </div>
+
+
+
+
+
+
+    });
 }
 function getCityId(name){
 	var city = null;
@@ -294,7 +420,7 @@ function setSubjectsForm(id){
 	let subjectStudy = $(id).selectize({
 		plugins: ['remove_button'],
 		create: true,
-		maxItems: 3,
+		maxItems: 2,
 		sortField: 'Name',
 		valueField: 'Name',
 		labelField: 'Name',
@@ -438,6 +564,25 @@ function uploadPhoto(upload,canvas){
 			reader.readAsDataURL(this.files[0]);
 		}
 	});
+}
+function parseURLParams(url){
+    var queryStart = url.indexOf("?") + 1,
+        queryEnd   = url.indexOf("#") + 1 || url.length + 1,
+        query = url.slice(queryStart, queryEnd - 1),
+        pairs = query.replace(/\+/g, " ").split("&"),
+        parms = {}, i, n, v, nv;
+
+    if (query === url || query === "") return;
+
+    for (i = 0; i < pairs.length; i++) {
+        nv = pairs[i].split("=", 2);
+        n = decodeURIComponent(nv[0]);
+        v = decodeURIComponent(nv[1]);
+
+        if (!parms.hasOwnProperty(n)) parms[n] = [];
+        parms[n].push(nv.length === 2 ? v : null);
+    }
+    return parms;
 }
 // for select objects
 function s(obj){
@@ -799,7 +944,7 @@ function ProfileStudent(AUTHENTICATE){
     // var selectDiv = s(".Search>.selectize-control>.selectize-input");
     // var cityDiv =  document.createElement("div");
     // cityDiv.setAttribute("data-value", cityName);
-    // cityDiv.setAttribute("class", "item");
+    // cityDiv.classList.add( "item");
     // cityDiv.innerHTML = cityName + '<a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a>';
     // selectDiv.appendChild(cityDiv);
 }
@@ -860,3 +1005,80 @@ function ChangeProfileStudent(AUTHENTICATE){
 	});
 	playloaderOff();
 }
+// for Search Tutor js
+function searchTutor(AUTHENTICATE){
+	isProfileFilled();
+	var lowerSlider = document.querySelector("#lower");
+	var upperSlider = document.querySelector("#upper");
+
+	document.querySelector("#two").value = upperSlider.value;
+	document.querySelector("#one").value = lowerSlider.value;
+
+	var lowerVal = parseInt(lowerSlider.value);
+	var upperVal = parseInt(upperSlider.value);
+
+	upperSlider.oninput = function () {
+		lowerVal = parseInt(lowerSlider.value);
+		upperVal = parseInt(upperSlider.value);
+
+		if (upperVal < lowerVal + 4) {
+			lowerSlider.value = upperVal - 4;
+			if (lowerVal == lowerSlider.min) {
+				upperSlider.value = 4;
+			}
+		}
+		document.querySelector("#two").value = this.value;
+		let one = document.querySelector("#one");
+		let two = document.querySelector("#two");
+	};
+
+	lowerSlider.oninput = function () {
+		lowerVal = parseInt(lowerSlider.value);
+		upperVal = parseInt(upperSlider.value);
+		if (lowerVal > upperVal - 4) {
+			upperSlider.value = lowerVal + 4;
+			if (upperVal == upperSlider.max) {
+				lowerSlider.value = parseInt(upperSlider.max) - 4;
+			}
+		}
+		document.querySelector("#one").value = this.value;
+		let one = document.querySelector("#one");
+		let two = document.querySelector("#two");
+	};
+	setCities('#selectcity');
+	setSubjectsForm('#selectSubject');
+	$("#filter-rate").selectize({
+		create: true,
+		sortField: "text"
+	});
+
+	function enableForm() {
+		$("#sort_form :input").prop("disabled", false);
+		$("#one").prop("disabled", true);
+		$("#two").prop("disabled", true);
+	}
+
+
+	var id = AUTHENTICATE;
+	var TeachersArray = getAllTeachers();
+	console.log(TeachersArray);
+	renderAllTeachers(TeachersArray,s(".profile-center"));
+}
+// for view Tutor js
+function viewTutor(AUTHENTICATE){
+	var params = parseURLParams(window.location.href);
+	var CurrentUser = getUser(AUTHENTICATE);
+	var teacher = getUser(params["id"]);
+	console.log(CurrentUser);
+	console.log(teacher);
+
+	let comment = s("#profile-comment");
+	comment.addEventListener("click", function () {
+		let first = s(".first-slide");
+		let second = s(".second-slide");
+		toggle(first);
+		toggle(second);
+	});
+}
+
+
