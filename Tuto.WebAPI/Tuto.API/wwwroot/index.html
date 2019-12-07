@@ -5,38 +5,39 @@
     <title></title>
 </head>
 <body>
-Test page
-<button onclick="foo()"></button>
-<script src="js/signalr/signalr.min.js"></script>
-<script>
-    var connection = new signalR.HubConnectionBuilder()
+    Test page
+    <button onclick="foo()">send</button>
+    <script src="js/signalr/signalr.min.js"></script>
+    <script>
+        var connection = new signalR.HubConnectionBuilder()
         .withUrl('/Hubs/TutoChat')
         .build();
 
-    connection.on('receiveMessage', (message) => { debugger; });
+        connection.on('receiveMessage', (message) => { debugger; });
 
-    connection.start()
+        connection.start()
         .catch(error => {
             console.error(error.message);
         });
-
-    function foo() {
-        fetch("https://localhost:44367/OData/ChatMessages",
+        alert(new Date().toISOString());
+        function foo() {
+            fetch("https://localhost:44367/OData/ChatMessages",
             {
                 method: "POST",
                 body: JSON.stringify(
-                    {
-                        "SendTime": "2012-11-11T00:00:00+02:00",
-                        "SenderId": "eb8f1b08-7213-ea11-b2ed-00d861c39030",
-                        "RecipientId": "5fc0dd20-7313-ea11-b2ed-00d861c39030",
-                        "Text": "test2"
-                    }),
+                {
+                    "SendTime": new Date().toISOString(),
+                    "SenderId": "869aad0c-5017-ea11-b815-00155d0ace00",
+                    "RecipientId": "869aad0c-5017-ea11-b815-00155d0ace00",
+                    "Text": "DIMA Pidщщor"
+                }),
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
             });
-    }
-</script>
+        }
+    </script>
 </body>
 </html>
+

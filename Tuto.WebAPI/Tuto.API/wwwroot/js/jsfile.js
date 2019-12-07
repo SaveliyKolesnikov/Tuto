@@ -5,6 +5,7 @@ var CHOOSE_ROLE = "ChooseRole.html";
 var PROFILE_PAGE_STUDENT = "profile-student.html";
 var PROFILE_PAGE_TEACHER = "profile-teacher.html";
 var TEACHER = "teacher.html?id=";
+var SEARCH_TUTOR = "searchTutor.html";
 
 // login page js
 function login_page(){
@@ -43,6 +44,37 @@ function Render(){
 		setTimeout(function(){fadeOutnojquery(hellopreloader);},1000);
 	};
 }
+function renderRight() {
+	let tutor_Search = s("#tutorSearch");
+	tutor_Search.addEventListener("click", function () {
+		location.href = URL_PATH+SEARCH_TUTOR;
+	});
+	let open_messages = s("#open_messages");
+	open_messages.addEventListener("click", function () {
+		let first = s(".start-right");
+		let second = s(".profile-chat");
+		toggle(first);
+		toggle(second);
+	});
+	let back_from_messages = s("#back_from_messages");
+	back_from_messages.addEventListener("click", function () {
+		let first = s(".start-right");
+		let second = s(".profile-chat");
+		toggle(first);
+		toggle(second);
+	});	
+	let back_to_messages = s("#back_to_messages");
+	back_to_messages.addEventListener("click", function () {
+		let first = s(".profile-chat");
+		let second = s(".profile-chat-message");
+		toggle(first);
+		toggle(second);
+	});	
+}
+function renderLeft(){
+	let my_profile_link = s("#my_profile_link");
+	my_profile_link.href = URL_PATH+CHOOSE_ROLE;
+}
 //Check Login status
 function isNew(){
 	if(getUser(Login())["IsProfileFilled"]){
@@ -63,6 +95,12 @@ function isTeacher(user){
 	if(user['TeacherInfo'])
 		return true;
 	return false;
+}
+function printRole(block, user){
+	var block = sa(block);
+	block.forEach(function (div) {
+		div.innerText = (user['TeacherInfo'])?"Teacher":"Student";
+	});
 }
 function Login(){
 	var AUTHENTICATE = null;
@@ -176,6 +214,97 @@ function DeleteUser(){
 			}
 		}
 	});
+}
+function getAllMessages(userId){
+	var arr = [];
+	//https://localhost:44367//OData/ChatMessages?$filter=RecipientId%20eq%20869aad0c-5017-ea11-b815-00155d0ace00&$orderby=SendTime%20desc
+	var url = URL_SERVER+"OData/ChatMessages?$filter=RecipientId%20eq%20"+userId+"%20or%20SenderId%20eq%20"+userId+"&$orderby=SendTime%20desc";
+	$.ajax({
+		type: "GET", 
+		async: false,
+		dataType: 'json',
+		url: url,
+		success: function (data) {
+			data['value'].forEach(function (message) {
+				arr.push(message);
+			});
+		}
+	});
+	return arr;
+}
+function getUserChats(arr_all_messages,blockId,userId){
+	var block = s(blockId);
+	$(blockId).empty();
+	var chats = arr_all_messages.sort(function(a,b){return a["SenderId"] < b["SenderId"] ? -1 : 1;}).reduce(function(arr, el){
+		if(!arr.length || arr[arr.length - 1]["SenderId"] != el["SenderId"]) {
+			arr.push(el);
+		}
+		return arr;
+	}, []);
+	console.log(chats);
+	chats.forEach(function (chat) {
+		var sender = getUser(chat["SenderId"]);
+		var review = document.createElement("div");
+		review.classList.add('review');
+		review.setAttribute("id",sender["Id"]);
+		review.setAttribute("onclick",'getSpecificChat("'+sender['Id']+'");');
+		block.appendChild(review);
+		//=============================
+		var img_profile_mini = document.createElement("div");
+		img_profile_mini.classList.add('img_profile_mini');
+		review.appendChild(img_profile_mini);
+		//=============================
+		var img = document.createElement("img");
+		img.setAttribute("src", sender["Picture"]);
+		img_profile_mini.appendChild(img);
+		//=============================
+		var sender_info = document.createElement("div");
+		sender_info.classList.add('sender_info');
+		review.appendChild(sender_info);
+		//=============================
+		var p_fio = document.createElement("p");
+		p_fio.classList.add('text-small');
+		p_fio.innerText = sender["Name"] + " " + sender["Surname"];
+		sender_info.appendChild(p_fio);
+		//=============================
+		var p_time = document.createElement("p");
+		p_time.classList.add('text-nano');
+		p_time.classList.add('message-time');
+		p_time.innerText = new Date(chat["SendTime"]).toLocaleTimeString();
+		sender_info.appendChild(p_time);
+		//=============================
+		var p_message = document.createElement("p");
+		p_message.classList.add('text-nano');
+		p_message.classList.add('message-text');
+		p_message.innerText = chat["Text"];
+		sender_info.appendChild(p_message);
+		//=============================
+	});
+
+
+
+	// <div class="review">
+	
+	//     <div class="img_profile_mini">
+	//         <img src="img/Profile.JPG" alt="" class="">
+	//     </div>
+	//     <div class="sender_info">
+	//         <p class="text-small">Katie Atakulova</p>
+	//         <p class="text-nano message-time">11:15
+	//         </p>
+	//         <p class="text-nano message-text">Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya
+	//             top.Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya top.Govno! Vse
+	//         </p>
+	
+	//     </div>
+	
+	// </div>
+}
+function getSpecificChat(idUser){
+	let first = s(".profile-chat");
+	let second = s(".profile-chat-message");
+	toggle(first);
+	toggle(second);
 }
 function getAllTeachers(){
 	var arr = [];
@@ -428,10 +557,10 @@ function setSubjectsForm(id){
 
 	});
 }
-function setSubjectsProfile(id){
+function setSubjectsProfile(id,user){
 	var selectsubject = s(id);
 	var arr = [];
-	var userSubjects = getUser(Login())["TeacherInfo"]["TeacherSubjects"];
+	var userSubjects = user["TeacherInfo"]["TeacherSubjects"];
 	userSubjects.forEach(function (element) {
 		arr.push(getSubjectName(element['SubjectId']));
 	});
@@ -566,23 +695,23 @@ function uploadPhoto(upload,canvas){
 	});
 }
 function parseURLParams(url){
-    var queryStart = url.indexOf("?") + 1,
-        queryEnd   = url.indexOf("#") + 1 || url.length + 1,
-        query = url.slice(queryStart, queryEnd - 1),
-        pairs = query.replace(/\+/g, " ").split("&"),
-        parms = {}, i, n, v, nv;
+	var queryStart = url.indexOf("?") + 1,
+	queryEnd   = url.indexOf("#") + 1 || url.length + 1,
+	query = url.slice(queryStart, queryEnd - 1),
+	pairs = query.replace(/\+/g, " ").split("&"),
+	parms = {}, i, n, v, nv;
 
-    if (query === url || query === "") return;
+	if (query === url || query === "") return;
 
-    for (i = 0; i < pairs.length; i++) {
-        nv = pairs[i].split("=", 2);
-        n = decodeURIComponent(nv[0]);
-        v = decodeURIComponent(nv[1]);
+	for (i = 0; i < pairs.length; i++) {
+		nv = pairs[i].split("=", 2);
+		n = decodeURIComponent(nv[0]);
+		v = decodeURIComponent(nv[1]);
 
-        if (!parms.hasOwnProperty(n)) parms[n] = [];
-        parms[n].push(nv.length === 2 ? v : null);
-    }
-    return parms;
+		if (!parms.hasOwnProperty(n)) parms[n] = [];
+		parms[n].push(nv.length === 2 ? v : null);
+	}
+	return parms;
 }
 // for select objects
 function s(obj){
@@ -733,10 +862,13 @@ function sendForm_User(a){
 }
 // for Profile teacher js
 function ProfileTeacher(AUTHENTICATE){
+	getUserChats(getAllMessages(AUTHENTICATE),".message");
 	isProfileFilled();
+	renderRight();
+	renderLeft();
 	setCities('#selectCity');
 	setSubjectsForm('#selectSubject');
-	setSubjectsProfile("#subjectsProfile");
+	setSubjectsProfile("#subjectsProfile",getUser(Login()));
 	uploadPhoto("#photo","#canvas");
 	var modal = s("#modal2"),
 	modalOverlay = s("#modal-overlay2"),
@@ -782,11 +914,11 @@ function ProfileTeacher(AUTHENTICATE){
 	dates.forEach(function (element) {
 		$("[name='"+element+"']").addClass('active').removeClass('passive');
 	});
-	var photos = sa(".User_Photo");
+	var photos = sa(".CurrentUser_Photo");
 	[].forEach.call(photos, function(photo){
 		photo.src = USR_DATA["Picture"];
 	});
-	var names = sa(".User_Name");
+	var names = sa(".CurrentUser_Name");
 	[].forEach.call(names, function(name){
 		name.innerText = USR_DATA["Name"]+" "+USR_DATA["Surname"];
 	}); 
@@ -877,6 +1009,8 @@ function ChangeProfileTeacher(AUTHENTICATE){
 // for Profile Student js
 function ProfileStudent(AUTHENTICATE){
 	isProfileFilled();
+	renderRight();
+	renderLeft();
 	setCities('#selectCity');
 	uploadPhoto("#photo","#canvas");
 
@@ -912,11 +1046,11 @@ function ProfileStudent(AUTHENTICATE){
 			location.appendChild(span);
 		}
 	}
-	var photos = sa(".User_Photo");
+	var photos = sa(".CurrentUser_Photo");
 	[].forEach.call(photos, function(photo){
 		photo.src = USR_DATA["Picture"];
 	});
-	var names = sa(".User_Name");
+	var names = sa(".CurrentUser_Photo");
 	[].forEach.call(names, function(name){
 		name.innerText = USR_DATA["Name"]+" "+USR_DATA["Surname"];
 	}); 
@@ -1008,6 +1142,7 @@ function ChangeProfileStudent(AUTHENTICATE){
 // for Search Tutor js
 function searchTutor(AUTHENTICATE){
 	isProfileFilled();
+	renderLeft();
 	var lowerSlider = document.querySelector("#lower");
 	var upperSlider = document.querySelector("#upper");
 
@@ -1066,11 +1201,10 @@ function searchTutor(AUTHENTICATE){
 }
 // for view Tutor js
 function viewTutor(AUTHENTICATE){
+	renderLeft();
 	var params = parseURLParams(window.location.href);
 	var CurrentUser = getUser(AUTHENTICATE);
 	var teacher = getUser(params["id"]);
-	console.log(CurrentUser);
-	console.log(teacher);
 
 	let comment = s("#profile-comment");
 	comment.addEventListener("click", function () {
@@ -1079,6 +1213,45 @@ function viewTutor(AUTHENTICATE){
 		toggle(first);
 		toggle(second);
 	});
+
+
+	setSubjectsProfile("#subjectsProfile",teacher);
+	s("#place").innerText = getCityName(teacher["CityId"]);
+	s("#additional_text").innerText = teacher["Description"] 
+	s("#price").innerText = teacher["TeacherInfo"]["MinimumWage"];
+	var location = s("#location");
+	location.innerHTML = '';
+	for(var prop in teacher["Address"]){
+		if(teacher["Address"][prop]){
+			var span = document.createElement('span');
+			span.className = 'location text-nano';
+			span.innerText = prop;
+			location.appendChild(span);
+		}
+	}
+	var dates = teacher["TeacherInfo"]["PreferredDaysOfWeek"].split(", ");
+	dates.forEach(function (element) {
+		$("[name='"+element+"']").addClass('active').removeClass('passive');
+	});
+	printRole(".CurrentUser_Role",CurrentUser);
+	printRole(".Teacher_Role", teacher);
+	var photos = sa(".CurrentUser_Photo");
+	[].forEach.call(photos, function(photo){
+		photo.src = CurrentUser["Picture"];
+	});
+	var names = sa(".CurrentUser_Name");
+	[].forEach.call(names, function(name){
+		name.innerText = CurrentUser["Name"]+" "+CurrentUser["Surname"];
+	}); 
+	photos = sa(".Teacher_photo");
+	[].forEach.call(photos, function(photo){
+		photo.src = teacher["Picture"];
+	});
+	names = sa(".Teacher_Name");
+	[].forEach.call(names, function(name){
+		name.innerText = teacher["Name"]+" "+teacher["Surname"];
+	}); 
 }
+
 
 

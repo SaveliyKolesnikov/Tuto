@@ -18,21 +18,21 @@
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/js/standalone/selectize.min.js"></script>
     <div class="profile">
-        <div class="profile-left">
+         <div class="profile-left">
             <a href="#" class="logo">
                 <h4>Tuto</h4>
             </a>
             <div class="profile-head">
                 <div class="img_profile_mini">
-                    <img src="img/Profile.JPG" alt="" class="" />
+                    <img src="img/Profile.JPG" alt="" class="CurrentUser_Photo" />
                 </div>
                 <div class="">
-                    <p class="text-nano">Teacher</p>
-                    <p class="text-small">Katie Atakulova</p>
+                    <p class="text-nano CurrentUser_Role">Student</p>
+                    <p class="text-small CurrentUser_Name">Katie Atakulova</p>
                 </div>
             </div>
             <div class="profile-link">
-                <a href="">
+                <a href="" id="my_profile_link">
                     <span class="icon-user"></span>
                     <span class="text-mini">My profile</span>
                 </a>
@@ -51,7 +51,7 @@
                 </a>
                 <a href="">
                     <span class="icon-log-out"></span>
-                    <span class="text-mini">Log out</span>
+                    <span class="text-mini" onclick="Logout();">Log out</span>
                 </a>
             </div>
         </div>
@@ -60,12 +60,12 @@
                 <div class="first-slide">
                     <div class="profile-head">
                         <div class="img_profile_maxi">
-                            <img src="img/Profile.JPG" alt="" class="" />
+                            <img src="img/Profile.JPG" alt="" class="Teacher_photo" />
                         </div>
                         <div class="">
-                            <p class="text-small">Teacher</p>
-                            <p class="text-medium">Katie Atakulova</p>
-                            <p class="text-nano">English,Deutsch</p>
+                            <p class="text-small Teacher_Role">Teacher</p>
+                            <p class="text-medium Teacher_Name">Katie Atakulova</p>
+                            <p class="text-nano" id="subjectsProfile">English,Deutsch</p>
                             <div id="location">
                                 <span class="location text-nano">Student`s home</span><span
                                 class="location text-nano">Another location</span>
@@ -98,13 +98,13 @@
                     </div>
                     <div class="wrap">
                         <div class="profile-main__flex">
-                            <p class="text-mini active">Mo</p>
-                            <p class="text-mini passive">Tu</p>
-                            <p class="text-mini active">We</p>
-                            <p class="text-mini active">Th</p>
-                            <p class="text-mini passive">Fr</p>
-                            <p class="text-mini active">Sa</p>
-                            <p class="text-mini passive">Su</p>
+                            <p class="text-mini passive" name="Monday">Mo</p>
+                            <p class="text-mini passive" name="Tuesday">Tu</p>
+                            <p class="text-mini passive" name="Wednesday">We</p>
+                            <p class="text-mini passive" name="Thursday">Th</p>
+                            <p class="text-mini passive" name="Friday">Fr</p>
+                            <p class="text-mini passive" name="Saturday">Sa</p>
+                            <p class="text-mini passive" name="Sunday">Su</p>
                         </div>
                     </div>
                     <div class="wrap">
@@ -123,10 +123,10 @@
                 <div class="second-slide" style="display: none;">
                     <div class="profile-head">
                         <div class="img_profile_maxi">
-                            <img src="img/Profile.JPG" alt="" class="" />
+                            <img src="img/Profile.JPG" alt="" class="Teacher_photo" />
                         </div>
                         <div class="">
-                            <p class="text-small">Teacher</p>
+                            <p class="text-small Teacher_Role">Teacher</p>
                             <p class="text-medium">Katie Atakulova</p>
                             <p class="text-nano">Average rating</p>
                             <div>
@@ -187,7 +187,7 @@
                                 <img src="img/Profile.JPG" alt="" class="" />
                             </div>
                             <div class="">
-                                <p class="text-nano">Teacher</p>
+                                <p class="text-nano Teacher_Role">Teacher</p>
                                 <p class="text-small">Katie Atakulova</p>
                                 <p class="text-nano comment-text">Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya
                                     top.Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya top.Govno! Vse
@@ -203,7 +203,7 @@
                                     <img src="img/Profile.JPG" alt="" class="" />
                                 </div>
                                 <div class="">
-                                    <p class="text-nano">Teacher</p>
+                                    <p class="text-nano Teacher_Role">Teacher</p>
                                     <p class="text-small">Katie Atakulova</p>
                                     <p class="text-nano comment-text">Govno! Vse ploho. Nastya top.Govno!
                                     </p>
@@ -232,11 +232,11 @@
                 <div class="review">
                     <!-- <div class="profile-head"> -->
                         <div class="img_profile_mini">
-                            <img src="img/Profile.JPG" alt="" class="" />
+                            <img src="img/Profile.JPG" alt="" class="Teacher_photo" />
                         </div>
                         <div class="">
-                            <p class="text-nano">Student</p>
-                            <p class="text-small">Katie Atakulova</p>
+                            <p class="text-nano Teacher_Role">Teacher</p>
+                            <p class="text-small Teacher_Name">Katie Atakulova</p>
 
                         </div>
                         <!-- </div> -->
