@@ -15,6 +15,7 @@
 </head>
 
 <body>
+    <script src="js/signalr/signalr.min.js"></script>
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/js/standalone/selectize.min.js"></script>
     <div class="profile">
@@ -227,65 +228,64 @@
 
                 </div>
             </div>
-            <div class="profile-right profile-chat-message">
-                <p class="text-medium chat-text text-bold">Message</p>
-                <div class="review">
-                    <!-- <div class="profile-head"> -->
-                        <div class="img_profile_mini">
-                            <img src="img/Profile.JPG" alt="" class="Teacher_photo" />
-                        </div>
-                        <div class="">
-                            <p class="text-nano Teacher_Role">Teacher</p>
-                            <p class="text-small Teacher_Name">Katie Atakulova</p>
+<div class="profile-right profile-chat-message" style="display: none;">
+    <div class="fixed-close">
+        <span class="arrow-close icon-arrow-back" id="back_to_messages"></span>
+    </div>
+    <p class="text-medium chat-text text-bold">Message</p>
+    <div class="review">
 
-                        </div>
-                        <!-- </div> -->
-                    </div>
+        <div class="img_profile_mini">
+            <img src="img/Profile.JPG" alt="" id="chatUserPhoto" />
+        </div>
+        <div class="">
+            <p class="text-nano" id="chatUserRole">Student</p>
+            <p class="text-small" id="chatUserName">Katie Atakulova</p>
 
+        </div>
 
-                    <div class="chat">
-                        <div class="messageInChat">
-                            <div class="messageAll messageClient">
-                                <p class="text-message"> Здравствуйте, Вероника. Когда будет готов наш заказ
-                                </p>
-                                <p class="message-time">11:15 am</p>
-                            </div>
-                        </div>
-                        <div class="messageInChat">
-                            <div class="messageAll messageClient">
-                                <p class="text-message"> Здравствуйте, Вероника. Когда будет готов наш заказ
-                                </p>
-                                <p class="message-time">11:15 am</p>
-                            </div>
-                        </div>
-                        <div class="messageInChat">
-                            <div class="messageAll messageClient">
-                                <p class="text-message"> Здравствуйте, Вероника. Когда будет готов наш заказ
-                                </p>
-                                <p class="message-time">11:15 am</p>
-                            </div>
-                        </div>
-                        <div class="messageInChat">
-                            <div class="messageAll messageManager">
-                                <p class="text-message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quibusdam
-                                    ullam illum hic consequuntur omnis qui dignissimos fuga! Possimus optio eveniet iusto illo,
-                                    harum ex provident veritatis eos modi expedita.
-                                </p>
-                                <p class="message-time">11:15 am</p>
-                            </div>
-                        </div>
+    </div>
 
 
-                    </div>
-                    <div class="sent-message">
-                        <textarea class="send-text" placeholder="Message" name="" id=""></textarea>
-                        <button class="button accent_button button_upper">Send message</button>
-                    </div>
-
-                </div>
-
-
+    <div class="chat">
+        <div class="messageInChat">
+            <div class="messageAll messageClient">
+                <p class="text-message"> Здравствуйте, Вероника. Когда будет готов наш заказ
+                </p>
+                <p class="message-time">11:15 am</p>
             </div>
+        </div>
+        <div class="messageInChat">
+            <div class="messageAll messageClient">
+                <p class="text-message"> Здравствуйте, Вероника. Когда будет готов наш заказ
+                </p>
+                <p class="message-time">11:15 am</p>
+            </div>
+        </div>
+        <div class="messageInChat">
+            <div class="messageAll messageClient">
+                <p class="text-message"> Здравствуйте, Вероника. Когда будет готов наш заказ
+                </p>
+                <p class="message-time">11:15 am</p>
+            </div>
+        </div>
+        <div class="messageInChat">
+            <div class="messageAll messageManager">
+                <p class="text-message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quibusdam
+                    ullam illum hic consequuntur omnis qui dignissimos fuga! Possimus optio eveniet iusto illo,
+                    harum ex provident veritatis eos modi expedita.
+                </p>
+                <p class="message-time">11:15 am</p>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="sent-message">
+        <textarea class="send-text" placeholder="Message" name="" id=""></textarea>
+        <button class="button accent_button button_upper">Send message</button>
+    </div>
+</div>
 
             <script src="js/jsfile.js"></script>
             <script>

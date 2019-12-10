@@ -5,31 +5,80 @@
     <title></title>
 </head>
 <body>
-    Test page
-    <button onclick="foo()">send</button>
+
+
+    From: <select name="from" id="from"></select>
+    To: <select name="to" id="to"></select>
+    Text: <input type="text" id="text">
+    Send: <button onclick="foo()">Send</button>
     <script src="js/signalr/signalr.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script>
+
+        var URL_SERVER = "https://localhost:44367/";
+        var from = document.querySelector("#from");
+        var to = document.querySelector("#to");
+        var text = document.querySelector("#text");
+
+        var url = URL_SERVER+"Odata/Users";
+        console.log(url);
+        $.ajax({
+            type: "GET", 
+            async: false,
+            dataType: 'json',
+            url: url,
+            success: function (data) {
+                data['value'].forEach(function (element) {
+                    var name = element['Name']+element["Surname"];
+                    var id = element['Id']
+                    var p = document.createElement("option");
+                    p.value = id;
+                    p.innerText = name;
+                    from.appendChild(p);
+                    
+                    name = element['Name']+element["Surname"];
+                    id = element['Id']
+                    p = document.createElement("option");
+                    p.value = id;
+                    p.innerText = name;
+                    to.appendChild(p);
+                    
+                });
+            }
+        });
+
+
+
+
+
+
+
         var connection = new signalR.HubConnectionBuilder()
         .withUrl('/Hubs/TutoChat')
         .build();
 
-        connection.on('receiveMessage', (message) => { debugger; });
+        connection.on('receiveMessage', (message) => { 
+            alert(message); 
+        });
 
         connection.start()
         .catch(error => {
             console.error(error.message);
         });
-        alert(new Date().toISOString());
+        
         function foo() {
+            var from = document.querySelector("#from").value
+            var to = document.querySelector("#to").value
+            var text = document.querySelector("#text").value
             fetch("https://localhost:44367/OData/ChatMessages",
             {
                 method: "POST",
                 body: JSON.stringify(
                 {
                     "SendTime": new Date().toISOString(),
-                    "SenderId": "869aad0c-5017-ea11-b815-00155d0ace00",
-                    "RecipientId": "869aad0c-5017-ea11-b815-00155d0ace00",
-                    "Text": "DIMA Pidщщor"
+                    "SenderId": from,
+                    "RecipientId": to,
+                    "Text": text
                 }),
                 headers: {
                     'Accept': 'application/json',

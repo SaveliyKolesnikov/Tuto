@@ -7,6 +7,9 @@ var PROFILE_PAGE_TEACHER = "profile-teacher.html";
 var TEACHER = "teacher.html?id=";
 var SEARCH_TUTOR = "searchTutor.html";
 
+
+
+
 // login page js
 function login_page(){
 	var url = URL_SERVER + "oauth/authorize?returnUrl=" + URL_SERVER+"ChooseRole.html";
@@ -215,6 +218,20 @@ function DeleteUser(){
 		}
 	});
 }
+function receiveMessages(){
+	var connection = new signalR.HubConnectionBuilder()
+        .withUrl('/Hubs/TutoChat')
+        .build();
+
+        connection.on('receiveMessage', (message) => { 
+            getUserChats(getAllMessages(Login()),".message",Login());
+        });
+
+        connection.start()
+        .catch(error => {
+            console.error(error.message);
+        });
+}
 function getAllMessages(userId){
 	var arr = [];
 	//https://localhost:44367//OData/ChatMessages?$filter=RecipientId%20eq%20869aad0c-5017-ea11-b815-00155d0ace00&$orderby=SendTime%20desc
@@ -235,19 +252,37 @@ function getAllMessages(userId){
 function getUserChats(arr_all_messages,blockId,userId){
 	var block = s(blockId);
 	$(blockId).empty();
-	var chats = arr_all_messages.sort(function(a,b){return a["SenderId"] < b["SenderId"] ? -1 : 1;}).reduce(function(arr, el){
-		if(!arr.length || arr[arr.length - 1]["SenderId"] != el["SenderId"]) {
-			arr.push(el);
+	// var chats = arr_all_messages.sort(function(a,b){return a["SenderId"] < b["SenderId"] ? -1 : 1;}).reduce(function(arr, el){
+	// 	if(!arr.length || arr[arr.length - 1]["SenderId"] != el["SenderId"]) {
+	// 		arr.push(el);
+	// 	}
+	// 	return arr;
+	// }, []);
+
+	var slovar = {};
+
+	var chats = arr_all_messages.filter(element => {
+		var key = element["RecipientId"];
+		if (element["RecipientId"] === userId)
+			key = element["SenderId"];
+		// if (element["SenderId"] === userId)
+		// 	return false;
+		if (slovar[key] === undefined) {
+			slovar[key] = true;
+			return true;
 		}
-		return arr;
-	}, []);
+
+		return false;
+	})
 	console.log(chats);
 	chats.forEach(function (chat) {
-		var sender = getUser(chat["SenderId"]);
+
+
+		var sender = getUser((chat["SenderId"]===userId)?chat["RecipientId"]:chat["SenderId"]);
 		var review = document.createElement("div");
 		review.classList.add('review');
 		review.setAttribute("id",sender["Id"]);
-		review.setAttribute("onclick",'getSpecificChat("'+sender['Id']+'");');
+		review.setAttribute("onclick",'setSpecificChat("'+sender['Id']+'");');
 		block.appendChild(review);
 		//=============================
 		var img_profile_mini = document.createElement("div");
@@ -276,7 +311,7 @@ function getUserChats(arr_all_messages,blockId,userId){
 		var p_message = document.createElement("p");
 		p_message.classList.add('text-nano');
 		p_message.classList.add('message-text');
-		p_message.innerText = chat["Text"];
+		p_message.innerText = (chat["SenderId"]==userId)?"You: "+chat["Text"]:""+chat["Text"];
 		sender_info.appendChild(p_message);
 		//=============================
 	});
@@ -300,11 +335,75 @@ function getUserChats(arr_all_messages,blockId,userId){
 	
 	// </div>
 }
-function getSpecificChat(idUser){
+function getSpecificChatMessages(firstPersonId, secondPersonId){
+	var arr = [];
+	//https://localhost:44367//OData/ChatMessages?$filter=RecipientId%20eq%20869aad0c-5017-ea11-b815-00155d0ace00&$orderby=SendTime%20desc
+	var url = URL_SERVER+"OData/ChatMessages?$filter=RecipientId eq "+firstPersonId+" and SenderId eq "+secondPersonId+" or SenderId eq "+firstPersonId+" and RecipientId eq "+secondPersonId;
+	$.ajax({
+		type: "GET", 
+		async: false,
+		dataType: 'json',
+		url: encodeURI(url),
+		success: function (data) {
+			data['value'].forEach(function (message) {
+				arr.push(message);
+			});
+		}
+	});
+	return arr;
+}
+function setSpecificChat(idUser){
 	let first = s(".profile-chat");
 	let second = s(".profile-chat-message");
 	toggle(first);
 	toggle(second);
+	var chatBlock = s(".chat");
+	$(".chat").empty();
+
+	var chatWith = getUser(idUser);
+	s("#chatUserPhoto").src = chatWith["Picture"];
+	s("#chatUserRole").innerText = (isTeacher(chatWith))?"Teacher":"Student";
+	s("#chatUserName").innerText = chatWith["Name"]+" "+chatWith["Surname"];
+
+	var chat = getSpecificChatMessages(idUser,Login());
+
+	chat.forEach(function (message){
+
+		var messageInChat = document.createElement("div");
+		messageInChat.classList.add('messageInChat');
+		chatBlock.appendChild(messageInChat);
+		//=============================
+		var messageAll = document.createElement("div");
+		messageAll.classList.add('messageAll');
+		messageAll.classList.add((message["SenderId"] == idUser)?"messageClient":"messageManager");
+		messageInChat.appendChild(messageAll);
+		//=============================
+		var text = document.createElement("p");
+		text.classList.add('text-message');
+		text.innerText = message["Text"];
+		messageAll.appendChild(text);
+		//=============================
+		var time = document.createElement("p");
+		time.classList.add('message-time');
+		time.innerText = new Date(message["SendTime"]).toLocaleTimeString();
+		messageAll.appendChild(time);
+		//=============================
+	});
+	chatBlock.scrollTop = chatBlock.scrollHeight;
+
+
+
+
+
+	// <div class="messageInChat">
+	// 	<div class="messageAll messageManager">
+	// 		<p class="text-message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quibusdam
+	// 			ullam illum hic consequuntur omnis qui dignissimos fuga! Possimus optio eveniet iusto illo,
+	// 			harum ex provident veritatis eos modi expedita.
+	// 		</p>
+	// 		<p class="message-time">11:15 am</p>
+	// 	</div>
+	// </div>
 }
 function getAllTeachers(){
 	var arr = [];
@@ -862,13 +961,13 @@ function sendForm_User(a){
 }
 // for Profile teacher js
 function ProfileTeacher(AUTHENTICATE){
-	getUserChats(getAllMessages(AUTHENTICATE),".message");
+	receiveMessages();
 	isProfileFilled();
 	renderRight();
 	renderLeft();
 	setCities('#selectCity');
 	setSubjectsForm('#selectSubject');
-	setSubjectsProfile("#subjectsProfile",getUser(Login()));
+	setSubjectsProfile("#subjectsProfile",getUser(AUTHENTICATE));
 	uploadPhoto("#photo","#canvas");
 	var modal = s("#modal2"),
 	modalOverlay = s("#modal-overlay2"),
@@ -937,6 +1036,35 @@ function ProfileTeacher(AUTHENTICATE){
 	s("#student-home").checked = USR_DATA["Address"]['Student`s home'];
 	s("#tutor-home").checked = USR_DATA["Address"]['Tutors`s home'];
 	s("#another-location").checked = USR_DATA["Address"]['Another location'];
+
+
+	var cityName = getCityName(USR_DATA["CityId"]);
+	$("#selectCity")[0].selectize.addOption({
+		value: cityName,
+		test: cityName
+	});
+	$("#selectCity")[0].selectize.addItem(cityName);
+	dates.forEach(function (element) {
+		$("#selectday")[0].selectize.addOption({
+			value: element,
+			test: element
+		});
+		$("#selectday")[0].selectize.addItem(element);
+	});
+
+	var userSubjects = USR_DATA["TeacherInfo"]["TeacherSubjects"];
+	userSubjects.forEach(function (element) {
+		var subject = getSubjectName(element['SubjectId'])
+		$("#selectSubject")[0].selectize.addOption({
+			value: subject,
+			test: subject
+		});
+		$("#selectSubject")[0].selectize.addItem(subject);
+	});
+
+
+
+	getUserChats(getAllMessages(AUTHENTICATE),".message",AUTHENTICATE);
 }
 function ChangeProfileTeacher(AUTHENTICATE){
 	playloaderOn();
@@ -1008,6 +1136,7 @@ function ChangeProfileTeacher(AUTHENTICATE){
 }
 // for Profile Student js
 function ProfileStudent(AUTHENTICATE){
+	receiveMessages();
 	isProfileFilled();
 	renderRight();
 	renderLeft();
@@ -1050,7 +1179,7 @@ function ProfileStudent(AUTHENTICATE){
 	[].forEach.call(photos, function(photo){
 		photo.src = USR_DATA["Picture"];
 	});
-	var names = sa(".CurrentUser_Photo");
+	var names = sa(".CurrentUser_Name");
 	[].forEach.call(names, function(name){
 		name.innerText = USR_DATA["Name"]+" "+USR_DATA["Surname"];
 	}); 
@@ -1069,18 +1198,15 @@ function ProfileStudent(AUTHENTICATE){
 	s("#tutor-home").checked = USR_DATA["Address"]['Tutors`s home'];
 	s("#another-location").checked = USR_DATA["Address"]['Another location'];
 	
-    // var select = s("#selectCity");
-    // var cityName = getCityName(USR_DATA["CityId"]);
-    // var city = document.createElement("option");
-    // city.setAttribute("value", cityName);
-    // city.setAttribute("selected","selected");
-    // select.appendChild(city);
-    // var selectDiv = s(".Search>.selectize-control>.selectize-input");
-    // var cityDiv =  document.createElement("div");
-    // cityDiv.setAttribute("data-value", cityName);
-    // cityDiv.classList.add( "item");
-    // cityDiv.innerHTML = cityName + '<a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a>';
-    // selectDiv.appendChild(cityDiv);
+	var cityName = getCityName(USR_DATA["CityId"]);
+	$("#selectCity")[0].selectize.addOption({
+		value: cityName,
+		test: cityName
+	});
+	$("#selectCity")[0].selectize.addItem(cityName);
+
+
+	getUserChats(getAllMessages(AUTHENTICATE),".message",AUTHENTICATE);
 }
 //<option value="Aleksandrovsk" selected="selected">Aleksandrovsk</option>
 // <div class="selectize-input items has-options has-items not-full">
