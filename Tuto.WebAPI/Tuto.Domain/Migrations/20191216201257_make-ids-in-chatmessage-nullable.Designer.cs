@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tuto.Domain;
 
 namespace Tuto.Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191216201257_make-ids-in-chatmessage-nullable")]
+    partial class makeidsinchatmessagenullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -220,12 +222,14 @@ namespace Tuto.Domain.Migrations
             modelBuilder.Entity("Tuto.Domain.Models.ChatMessage", b =>
                 {
                     b.HasOne("Tuto.Domain.Models.User", "Recipient")
-                        .WithMany()
-                        .HasForeignKey("RecipientId");
+                        .WithMany("RecievedMessages")
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Tuto.Domain.Models.User", "Sender")
-                        .WithMany()
-                        .HasForeignKey("SenderId");
+                        .WithMany("SendMessages")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Tuto.Domain.Models.Lesson", b =>

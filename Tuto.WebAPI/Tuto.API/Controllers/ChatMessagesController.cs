@@ -80,7 +80,7 @@ namespace Tuto.API.Controllers
             if (!await _userRepository.Read().AnyAsync(u => u.Id == message.RecipientId))
                 return (false, $"User with id {message.RecipientId} doesn't exist.");
 
-            if (sender.Roles.Any(r => r.Name == AuthRoles.Teacher) && !await _chatManager.HaveAnyCommonMessages(sender.Id, message.RecipientId))
+            if (sender.Roles.Any(r => r.Name == AuthRoles.Teacher) && !await _chatManager.HaveAnyCommonMessages(sender.Id, message.RecipientId.Value))
             {
                 return (false, "Teacher cannot send first message.");
             }
