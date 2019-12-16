@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Tuto.Domain.Models;
-using Tuto.Domain.Repositories;
+using Tuto.Services.Interfaces;
 
 namespace Tuto.API.Controllers
 {
@@ -17,11 +13,11 @@ namespace Tuto.API.Controllers
 
     public class HelperController : ControllerBase
     {
-        private readonly IRepository<ChatMessage> _chatMessages;
+        private readonly IChatManager _chatManager;
 
-        public HelperController(IRepository<ChatMessage> chatMessages)
+        public HelperController(IChatManager chatManager)
         {
-            _chatMessages = chatMessages;
+            _chatManager = chatManager;
         }
 
         [HttpPost]
@@ -29,8 +25,7 @@ namespace Tuto.API.Controllers
         {
             var userId = guids.UserId;
             var teacherId = guids.TeacherId;
-            var haveAnyCommonMessages = await _chatMessages.Read().AnyAsync(cm => (cm.SenderId == userId && cm.RecipientId == teacherId) ||
-            (cm.SenderId == teacherId && cm.RecipientId == userId));
+            var haveAnyCommonMessages = await _chatManager.HaveAnyCommonMessages(userId, teacherId);
             return haveAnyCommonMessages;
         }
     }
