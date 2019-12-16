@@ -1802,23 +1802,229 @@ SETTINGS
   background: #eb5757;
   color: #ffffff;
 }
+
 /* Moderator */
 
-.wrap-profile {
+.profile-moderator {
+  background: #f0f2f9;
+  width: calc(100% - 19%);
+  position: relative;
+  box-sizing: border-box;
+  padding: 15px 25px;
+  max-height: 100vh;
+}
+
+.moderation-block {
+  background: white;
+  /* margin-top: 8px; */
+  width: auto;
+  height: auto;
+  max-height: calc(100% - 112px);
+  border-radius: 5px;
+  overflow: scroll;
+}
+
+.button-moderator {
+  border-radius: 11px;
+  width: 100px;
+  height: 30px;
+  font-weight: 800;
+  font-size: 9px;
+  line-height: 12px;
+  color: #f0f2f9;
+  border: none;
+  display: inline-block;
+  margin: 13px 10px;
+}
+
+.button-moderator-purple {
+  background: #6b76cb;
+}
+
+.button-moderator-red {
+  background: #eb5757;
+  color: #ffffff;
+}
+
+.moderator-block-table {
+  border-collapse: collapse;
+  min-height: 497px;
+  /* max-height: 100%; */
+  /* max-height: 500px; */
+  overflow: auto;
+}
+
+.moderator-block-table th {
+  position: sticky;
+  top: -1px;
+  background: white;
+}
+
+.moderator-block-table th,
+.moderator-block-table td {
+  border: 1px solid #f0f2f9;
+  font-size: 16px;
+  line-height: 20px;
+  /* identical to box height, or 225% */
+  padding: 12px 0px 12px 26px;
+  text-align: left;
+  /* Blue */
+
+  color: #2f3676;
+}
+
+.moderator-block-table td {
+  height: 110px;
+  cursor: pointer;
+  /* overflow: hidden; */
+}
+
+.moderator-block-table tr:hover {
+  background: #dde3f7;
+  border: 1px solid white;
+}
+
+.moderator-block-table tr td:first-of-type {
+  text-decoration: underline;
+}
+
+/* Blocked user */
+
+.blocked-user {
+  background: #f4f6fd;
+}
+
+.moderator-block-table tr.blocked-user:hover {
+  background: #c7d3ff;
+  border: 1px solid #2f3676;
+}
+
+.moderator_name {
+  width: 15.5%;
+}
+
+.moderator_email {
+  width: 22.5%;
+}
+
+.moderator_data {
+  width: 12.5%;
+}
+
+.moderator_comment {
+  width: 25.5%;
+}
+
+.moderator-filter {
+  margin-bottom: 0;
+  padding: 35px 26px;
+  background: white;
+}
+
+.userblocked-block {
+  max-height: calc(100% - 222px);
+}
+
+.userblocked-block .button-moderator {
+  font-size: 12px;
+}
+
+.userblocked-block .moderator_comment {
+  width: 35%;
+}
+
+.blocked-user:first-child {}
+
+.button-delete-red {
+  background: #eb5757;
+  color: #ffffff;
+  border: none;
+}
+
+.wrap-profile .profile-delete {
+  bottom: 77px;
+}
+
+.block-delete {
   display: flex;
-  flex-direction: column;
   align-items: center;
 }
 
-.leave-feedback {
-  padding: 7px 0;
-  cursor: pointer;
+.delete-comment {
+  margin: 0 0 0 10px;
+  width: 100px;
+  height: 30px;
+  font-weight: 800;
+  font-size: 8px;
+  padding: 0;
+  color: #ffffff;
 }
 
-.button-teacher {
-  margin: 50px 0 0;
+/* Moderator */
+
+
+/* Statistic */
+
+.block-statistic {
+  background: white;
+  width: 90%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-self: center;
+  align-self: center;
+  padding: 25px;
+  /* align-items: center; */
 }
 
+.block-statistic p {
+  line-height: 2px;
+}
+
+.text-name-stat {
+  color: #2F3676;
+}
+
+.block-statistic .place_input {
+  display: flex;
+  justify-content: center;
+}
+
+.charts-round {
+  width: 9.5em;
+  height: 9.5em;
+  border: 10px solid#6B76CB;
+  border-radius: 50%;
+  padding: 1.4644em;
+  box-sizing: border-box;
+  background: white;
+}
+
+p.charts-text {
+  display: flex;
+  flex-wrap: wrap;
+  height: 100%;
+  line-height: 18px;
+  justify-content: center;
+  text-align: center;
+
+  font-size: 14px;
+  letter-spacing: 0.01em;
+
+  color: #6B76CB;
+}
+
+p.charts-text span {
+  font-size: 20px;
+}
+
+.rounds {
+  margin: 25px 0;
+  display: flex;
+  justify-content: space-around;
+}
+
+/* Statistic */
 /*for Uploaded Image in form*/
 #canvas{
   border: 2px dashed #6b76cb;
