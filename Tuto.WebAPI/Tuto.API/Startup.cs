@@ -57,6 +57,7 @@ namespace Tuto.API
             services.AddTransient<IRepository<TeacherSubject>, GenericRepository<TeacherSubject>>();
             services.AddTransient<IGoogleOAuthService, GoogleOAuthService>();
             services.AddTransient<IAppUserManager, AppUserManager>();
+            services.AddTransient<IChatManager, ChatManager>();
 
             services.AddSingleton<ISessionStorage<AppUser>, SessionMemoryStorage<AppUser>>();
             services.AddSignalR(options => options.EnableDetailedErrors = true);
