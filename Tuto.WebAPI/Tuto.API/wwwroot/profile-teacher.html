@@ -17,7 +17,7 @@
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/js/standalone/selectize.min.js"></script>
     <div class="profile">
-       <div class="profile-left">
+       <div class="profile-left " style="display: flex;">
         <a href="#" class="logo">
             <h4>Tuto</h4>
         </a>
@@ -54,7 +54,7 @@
             </a>
         </div>
     </div>
-    <div class="profile-center center">
+    <div class="profile-center center"  style="display: flex;">
         <div class="profile-center__block">
             <div class="first-slide">
                 <span class="text-nano edit">Edit</span>
@@ -233,7 +233,8 @@
 </div>
 <div class="profile-right profile-chat" style="display: none;">
     <div class="fixed-close">
-        <span class="icon-arrow-back arrow-close" id="back_from_messages"></span>
+        <span class="arrow-close icon-arrow-back" id="back_from_messages"></span>
+        <span class="arrow-close icon-enlarge" id="fullsize_messages"></span>
     </div>
     <p class="text-medium chat-text text-bold">Chat</p>
     <div class="input_container">
@@ -421,6 +422,7 @@
 <div class="profile-right profile-chat-message" style="display: none;">
     <div class="fixed-close">
         <span class="arrow-close icon-arrow-back" id="back_to_messages"></span>
+        <span class="arrow-close icon-enlarge" id="fullsize_messages"></span>
     </div>
     <p class="text-medium chat-text text-bold">Message</p>
     <div class="review">
@@ -472,8 +474,8 @@
 
     </div>
     <div class="sent-message">
-        <textarea class="send-text" placeholder="Message" name="" id=""></textarea>
-        <button class="button accent_button button_upper">Send message</button>
+        <textarea class="send-text" placeholder="Message" name="" id="sendMessageInChat"></textarea>
+        <button onclick='sendMessage("#sendMessageInChat");' class="button accent_button button_upper" >Send message</button>
     </div>
 </div>
 

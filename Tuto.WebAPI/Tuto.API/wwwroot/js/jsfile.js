@@ -48,35 +48,71 @@ function Render(){
 	};
 }
 function renderRight() {
+	let third = sa(".profile-right")
+	if(third!=null)
+		third.forEach(function(el){
+			el.style.width = '23%';
+		});
 	let tutor_Search = s("#tutorSearch");
-	tutor_Search.addEventListener("click", function () {
-		location.href = URL_PATH+SEARCH_TUTOR;
-	});
+	if(tutor_Search!=null)
+		tutor_Search.addEventListener("click", function () {
+			location.href = URL_PATH+SEARCH_TUTOR;
+		});
 	let open_messages = s("#open_messages");
-	open_messages.addEventListener("click", function () {
-		let first = s(".start-right");
-		let second = s(".profile-chat");
-		toggle(first);
-		toggle(second);
-	});
+	if(open_messages!=null)
+		open_messages.addEventListener("click", function () {
+			let first = s(".start-right");
+			let second = s(".profile-chat");
+			toggle(first);
+			toggle(second);
+		});
 	let back_from_messages = s("#back_from_messages");
-	back_from_messages.addEventListener("click", function () {
-		let first = s(".start-right");
-		let second = s(".profile-chat");
-		toggle(first);
-		toggle(second);
-	});	
+	if(back_from_messages!=null)
+		back_from_messages.addEventListener("click", function () {
+			let first = s(".start-right");
+			let second = s(".profile-chat");
+			toggle(first);
+			toggle(second);
+		});	
 	let back_to_messages = s("#back_to_messages");
-	back_to_messages.addEventListener("click", function () {
-		let first = s(".profile-chat");
-		let second = s(".profile-chat-message");
-		toggle(first);
-		toggle(second);
-	});	
+	if(back_to_messages!=null)
+		back_to_messages.addEventListener("click", function () {
+			let first = s(".profile-chat");
+			let second = s(".profile-chat-message");
+			toggle(first);
+			toggle(second);
+		});	
+	let fullsize_messages = sa("#fullsize_messages");
+	if(fullsize_messages!=null)
+		fullsize_messages.forEach(function(el){
+			el.addEventListener("click", function () {
+				let first = s(".profile-left");
+				first.style.display = (first.style.display == 'none') ? 'flex' : 'none'
+				let second = s(".profile-center");
+				second.style.display = (second.style.display == 'none') ? 'flex' : 'none'
+				let third = sa(".profile-right")
+				third.forEach(function(el){
+					el.style.width = (el.style.width == '23%') ? '100vw' : '23%';
+				});
+
+			});	
+		});
 }
 function renderLeft(){
+	var USR_DATA = getUser(Login());
+
+
 	let my_profile_link = s("#my_profile_link");
 	my_profile_link.href = URL_PATH+CHOOSE_ROLE;
+	printRole(".CurrentUser_Role",USR_DATA);
+	var photos = sa(".CurrentUser_Photo");
+	[].forEach.call(photos, function(photo){
+		photo.src = USR_DATA["Picture"];
+	});
+	var names = sa(".CurrentUser_Name");
+	[].forEach.call(names, function(name){
+		name.innerText = USR_DATA["Name"]+" "+USR_DATA["Surname"];
+	}); 
 }
 //Check Login status
 function isNew(){
@@ -220,17 +256,46 @@ function DeleteUser(){
 }
 function receiveMessages(){
 	var connection = new signalR.HubConnectionBuilder()
-        .withUrl('/Hubs/TutoChat')
-        .build();
+	.withUrl('/Hubs/TutoChat')
+	.build();
 
-        connection.on('receiveMessage', (message) => { 
-            getUserChats(getAllMessages(Login()),".message",Login());
-        });
+	
 
-        connection.start()
-        .catch(error => {
-            console.error(error.message);
-        });
+	connection.on('receiveMessage', (message) => { 
+		getUserChats(getAllMessages(Login()),".message",Login());
+		renderSpecificMessages(s("#chatUserPhoto").alt);
+
+	});
+
+	connection.start()
+	.catch(error => {
+		console.error(error.message);
+	});
+
+	// var sendButton = s(".sent-message>button");
+	// sendButton.setAttribute("onclick",'sendMessage("#sendMessageInChat");');
+}
+function sendMessage(messageBlock) {
+	var from = Login();
+	var to = s("#chatUserPhoto").alt;
+	var text = s(messageBlock).value;
+	s(messageBlock).value = "";
+
+	fetch("https://localhost:44367/OData/ChatMessages",
+	{
+		method: "POST",
+		body: JSON.stringify(
+		{
+			"SendTime": new Date().toISOString(),
+			"SenderId": from,
+			"RecipientId": to,
+			"Text": text
+		}),
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+	});
 }
 function getAllMessages(userId){
 	var arr = [];
@@ -357,11 +422,15 @@ function setSpecificChat(idUser){
 	let second = s(".profile-chat-message");
 	toggle(first);
 	toggle(second);
+	renderSpecificMessages(idUser);
+}
+function renderSpecificMessages(idUser){
 	var chatBlock = s(".chat");
 	$(".chat").empty();
 
 	var chatWith = getUser(idUser);
 	s("#chatUserPhoto").src = chatWith["Picture"];
+	s("#chatUserPhoto").alt = idUser;
 	s("#chatUserRole").innerText = (isTeacher(chatWith))?"Teacher":"Student";
 	s("#chatUserName").innerText = chatWith["Name"]+" "+chatWith["Surname"];
 
@@ -406,9 +475,12 @@ function setSpecificChat(idUser){
 	// </div>
 }
 function getAllTeachers(){
+
 	var arr = [];
 	//https://localhost:44367/Odata/Users?$expand=TeacherInfo($expand=TeacherSubjects)&$filter=(TeacherInfo+ne+null)
 	var url = URL_SERVER+"Odata/Users?$expand=TeacherInfo($expand=TeacherSubjects)&$filter=(TeacherInfo+ne+null)";
+
+
 	$.ajax({
 		type: "GET", 
 		async: false,
@@ -421,6 +493,8 @@ function getAllTeachers(){
 			});
 		}
 	});
+
+	
 	return arr;
 }
 function renderAllTeachers(teachers,block){
@@ -858,7 +932,8 @@ function change_step_prev(i){
 	}   
 }
 function toggle(el) {
-	el.style.display = (el.style.display == 'none') ? 'block' : 'none'
+	if (el)
+		el.style.display = (el.style.display == 'none') ? 'block' : 'none'
 }
 // for TeacherReg js
 function TeacherReg(AUTHENTICATE){
@@ -920,6 +995,7 @@ function sendForm_User(a){
 	var base64 = s('#canvas').toDataURL('image/jpeg',0.7);
 	if(!id||!name||!surname||!selectCity||!bio||!input_file||!base64){
 		alert("Something Wrong");
+		playloaderOff();
 		return;
 	}
 	var cityId = getCityId(selectCity.value);
@@ -949,6 +1025,7 @@ function sendForm_User(a){
 				break;
 				default:
 				alert("ServerError");
+				playloaderOff();
 				break;
 			}
 
@@ -1102,6 +1179,7 @@ function ChangeProfileTeacher(AUTHENTICATE){
 
 	if(!id||!name||!surname||!selectCity||!bio||!input_file||!base64){
 		alert("Something Wrong");
+		playloaderOff();
 		return;
 	}
 	var cityId = getCityId(selectCity.value);
@@ -1127,6 +1205,7 @@ function ChangeProfileTeacher(AUTHENTICATE){
 				break;
 				default:
 				alert("ServerError");
+				playloaderOff();
 				break;
 			}
 
@@ -1233,6 +1312,7 @@ function ChangeProfileStudent(AUTHENTICATE){
 	var base64 = s('#canvas').toDataURL('image/jpeg',0.7);
 	if(!id||!name||!surname||!selectCity||!bio||!input_file||!base64){
 		alert("Something Wrong");
+		playloaderOff();
 		return;
 	}
 	var cityId = getCityId(selectCity.value);
@@ -1258,6 +1338,7 @@ function ChangeProfileStudent(AUTHENTICATE){
 				break;
 				default:
 				alert("ServerError");
+				playloaderOff();
 				break;
 			}
 
@@ -1269,6 +1350,112 @@ function ChangeProfileStudent(AUTHENTICATE){
 function searchTutor(AUTHENTICATE){
 	isProfileFilled();
 	renderLeft();
+	setCities('#selectCity');
+	setSubjectsForm('#selectSubject');
+	$("#filter-rate").selectize({
+		create: true,
+		sortField: "text"
+	});
+
+	function enableForm() {
+		$("#sort_form :input").prop("disabled", false);
+		$("#one").prop("disabled", true);
+		$("#two").prop("disabled", true);
+	}
+
+	var params = parseURLParams(window.location.href);
+	var id = AUTHENTICATE;
+	
+	if(params){
+		//https://localhost:44367/searchTutor.html?
+		// subjectwork=Albanian+language
+		// &price_from=22
+		// &price_to=99
+		// &citywork=Alchevsk
+		// &student-home=on
+		// &tutor-home=on
+		// &another-location=on
+		var filters = {};
+		if(params["subjectwork"]){
+			var job = params["subjectwork"][0];
+			$("#selectSubject")[0].selectize.addOption({
+				value: job,
+				test: job
+			});
+			$("#selectSubject")[0].selectize.addItem(job);
+			filters["Subject"]= params["subjectwork"];
+		}
+		if(params["citywork"]){
+			var city = params["citywork"][0];
+			$("#selectCity")[0].selectize.addOption({
+				value: city,
+				test: city
+			});
+			$("#selectCity")[0].selectize.addItem(city);
+			filters["City"] = params["citywork"]
+		}
+		if(params["price_from"]) {
+			s("#lower").value = params["price_from"];
+			filters["From"] = params["price_from"];
+		}
+		if(params["price_to"]) {
+			s("#upper").value = params["price_to"];
+			filters["To"] = params["price_to"];
+		}
+		if(params["student-home"]) {
+			s("#student-home").checked = true;
+		}
+		if(params["tutor-home"]) {
+			s("#tutor-home").checked = true;
+		}
+		if(params["another-location"]) {
+			s("#another-location").checked = true;
+		}
+
+
+		var TeachersArray = getAllTeachers();
+
+		var filterTeachers = TeachersArray.filter(element => {
+			if(filters["City"]!=null){
+				if(element["CityId"] != getCityId(filters["City"]))
+					return false
+			}
+			if(filters["From"]!=null){
+				if(element["TeacherInfo"]["MinimumWage"] < filters["From"])
+					return false
+			}
+			if(filters["To"]!=null){
+				if(element["TeacherInfo"]["MinimumWage"] > filters["To"])
+					return false
+			}
+			if(filters["Subject"]!=null){
+				var flag = false;
+				element["TeacherInfo"]["TeacherSubjects"].forEach(function(el){
+					if(el["SubjectId"] == getSubjectId(filters["Subject"]))
+						flag = true;
+				});
+				if(!flag)
+					return false
+			}
+			return true;
+		})
+		console.log(filterTeachers);
+		renderAllTeachers(filterTeachers,s(".profile-center"));
+		
+	}
+	else{
+		var TeachersArray = getAllTeachers();
+		console.log(TeachersArray);
+		renderAllTeachers(TeachersArray,s(".profile-center"));
+	}
+	
+
+
+
+
+
+
+
 	var lowerSlider = document.querySelector("#lower");
 	var upperSlider = document.querySelector("#upper");
 
@@ -1306,32 +1493,39 @@ function searchTutor(AUTHENTICATE){
 		let one = document.querySelector("#one");
 		let two = document.querySelector("#two");
 	};
-	setCities('#selectcity');
-	setSubjectsForm('#selectSubject');
-	$("#filter-rate").selectize({
-		create: true,
-		sortField: "text"
-	});
-
-	function enableForm() {
-		$("#sort_form :input").prop("disabled", false);
-		$("#one").prop("disabled", true);
-		$("#two").prop("disabled", true);
-	}
-
-
-	var id = AUTHENTICATE;
-	var TeachersArray = getAllTeachers();
-	console.log(TeachersArray);
-	renderAllTeachers(TeachersArray,s(".profile-center"));
 }
+
+
+function sendSearchForm(){
+	playloaderOn();
+
+	var checkers = {
+		'Student`s home':s('#student-home').checked,
+		'Tutors`s home':s('#tutor-home').checked,
+		'Another location':s('#another-location').checked
+	};
+	var selectCity = s('#selectCity>option');
+	var selectSubject = sa('#selectSubject>option');
+	var subjectsIds = [];
+	selectSubject.forEach(function (element) {
+		var name = element.value;
+		subjectsIds.push(getSubjectId(element.value));
+	});
+	var price_from = s("#one");
+	var price_to = s("#two");
+	
+}
+
+
 // for view Tutor js
 function viewTutor(AUTHENTICATE){
 	renderLeft();
+	renderRight();
 	var params = parseURLParams(window.location.href);
 	var CurrentUser = getUser(AUTHENTICATE);
 	var teacher = getUser(params["id"]);
-
+	receiveMessages();
+	setSpecificChat(teacher["Id"]);
 	let comment = s("#profile-comment");
 	comment.addEventListener("click", function () {
 		let first = s(".first-slide");
@@ -1359,7 +1553,6 @@ function viewTutor(AUTHENTICATE){
 	dates.forEach(function (element) {
 		$("[name='"+element+"']").addClass('active').removeClass('passive');
 	});
-	printRole(".CurrentUser_Role",CurrentUser);
 	printRole(".Teacher_Role", teacher);
 	var photos = sa(".CurrentUser_Photo");
 	[].forEach.call(photos, function(photo){
@@ -1377,6 +1570,8 @@ function viewTutor(AUTHENTICATE){
 	[].forEach.call(names, function(name){
 		name.innerText = teacher["Name"]+" "+teacher["Surname"];
 	}); 
+
+	getUserChats(getAllMessages(AUTHENTICATE),".message",AUTHENTICATE);
 }
 
 

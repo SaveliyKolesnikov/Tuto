@@ -74,36 +74,36 @@
                                 <div class="price-wrap">
                                     <div class="price-wrap-1">
                                         <label for="one">$</label>
-                                        <input id="one" disabled />
+                                        <input  id="one" disabled />
                                     </div>
                                     <div class="price-wrap_line">–</div>
                                     <div class="price-wrap-2">
                                         <label for="two">$</label>
-                                        <input id="two" disabled />
+                                        <input  id="two" disabled />
                                     </div>
                                 </div>
                                 <div class="price-field">
-                                    <input type="range" min="1" max="150" value="1" id="lower" />
-                                    <input type="range" min="1" max="150" value="150" id="upper" />
+                                    <input type="range" name="price_from" min="1" max="999" value="1" id="lower" />
+                                    <input type="range" name="price_to" min="1" max="999" value="999" id="upper" />
                                 </div>
                             </fieldset>
                         </div>
                         <div class="search-wrap-right">
                             <div class="Search">
-                                <select name="citywork" placeholder="City" id="selectcity" multiple="multiple">
+                                <select name="citywork" placeholder="City" id="selectCity" multiple="multiple">
                                 </select>
                             </div>
                             <div class="place_input">
                                 <label class="container">Student`s home
-                                    <input type="checkbox" id="student-home" checked="checked" />
+                                    <input type="checkbox" name="student-home" id="student-home" />
                                     <span class="checkmark"></span>
                                 </label>
                                 <label class="container">Tutor`s home
-                                    <input type="checkbox" id="tutor-home" />
+                                    <input type="checkbox" name="tutor-home" id="tutor-home" />
                                     <span class="checkmark"></span>
                                 </label>
                                 <label class="container">Another location
-                                    <input type="checkbox" id="another-location" />
+                                    <input type="checkbox" name="another-location" id="another-location" />
                                     <span class="checkmark"></span>
                                 </label>
                             </div>

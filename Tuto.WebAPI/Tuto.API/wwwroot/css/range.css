@@ -9,6 +9,7 @@
 .price-field {
     position: relative;
     width: 100%;
+    z-index: 0;
     /*  height: 36px;*/
     box-sizing: border-box;
     /*  background: rgba(248, 247, 244, 0.2);*/

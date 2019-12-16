@@ -1,3 +1,17 @@
+html, body, div, span, applet, object, iframe,
+h1,h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video{transition:.4s ease;}
+
 body {
   font-family: "Avenir";
   /* width: 100vw; */
@@ -1518,7 +1532,7 @@ SETTINGS
 }
 
 .arrow-close {
-  display: flex;
+  display: inline-flex;
   justify-self: center;
   z-index: 3;
   margin-left: 15px;
@@ -1637,6 +1651,7 @@ SETTINGS
 
 .messageManager {
   right: 10px;
+  background: #d1d6e7!important;
   float: right;
 }
 
@@ -1644,7 +1659,7 @@ SETTINGS
   content: " ";
   right: 5px;
   /* bottom: -12px; */
-  border-right: 20px solid #f0f2f9;
+  border-right: 20px solid #d1d6e7;
   border-bottom-left-radius: 16px 14px;
   transform: translate(0, 10px);
   z-index: 0;
@@ -1700,6 +1715,7 @@ SETTINGS
 .messageAll p.text-message {
   /* max-width: 187px; */
   line-height: 19px;
+  word-wrap: break-word;
   margin: 0;
 }
 

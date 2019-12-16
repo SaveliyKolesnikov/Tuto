@@ -205,3 +205,7 @@
   content: "\e908";
   color: #6b76cb;
 }
+.icon-enlarge:before {
+  content: "\e989";
+  color: #6b76cb;
+}

@@ -106,7 +106,8 @@
 </div>
 <div class="profile-right profile-chat" style="display: none;">
     <div class="fixed-close">
-        <span class="icon-arrow-back arrow-close" id="back_from_messages"></span>
+        <span class="arrow-close icon-arrow-back" id="back_from_messages"></span>
+        <span class="arrow-close icon-enlarge" id="fullsize_messages"></span>
     </div>
     <p class="text-medium chat-text text-bold">Chat</p>
     <div class="input_container">
@@ -294,6 +295,7 @@
 <div class="profile-right profile-chat-message" style="display: none;">
     <div class="fixed-close">
         <span class="arrow-close icon-arrow-back" id="back_to_messages"></span>
+        <span class="arrow-close icon-enlarge" id="fullsize_messages"></span>
     </div>
     <p class="text-medium chat-text text-bold">Message</p>
     <div class="review">
@@ -345,8 +347,8 @@
 
     </div>
     <div class="sent-message">
-        <textarea class="send-text" placeholder="Message" name="" id=""></textarea>
-        <button class="button accent_button button_upper">Send message</button>
+        <textarea class="send-text" placeholder="Message" name="" id="sendMessageInChat"></textarea>
+        <button onclick='sendMessage("#sendMessageInChat");' class="button accent_button button_upper" >Send message</button>
     </div>
 </div>
 
