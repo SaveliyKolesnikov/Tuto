@@ -8,8 +8,8 @@ namespace Tuto.Domain.Models
     {
         public Guid Id { get; set; }
         public DateTime SendTime { get; set; }
-        public Guid SenderId { get; set; }
-        public Guid RecipientId { get; set; }
+        public Guid? SenderId { get; set; }
+        public Guid? RecipientId { get; set; }
         public string Text { get; set; }
         [ForeignKey("SenderId")]
         public User Sender { get; set; }
