@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+	<title>Step one</title>
+	<link rel="stylesheet" href="css/normalize.css" />
+	<link rel="stylesheet" href="font/stylesheet.css" />
+	<link rel="stylesheet" href="/libs/selectize.default.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<script src="/libs/kit.fontawesome.js" crossorigin="anonymous"></script>
+</head>
+<body>
+	<script src="/libs/jquery-2.2.4.min.js"></script>
+	<script src="/libs/selectize.min.js"></script>
+	
+	<div class="modal-overlay" id="modal-overlay"></div>
+	<div class="modal" id="modal" aria-hidden="true" aria-labelledby="modalTitle" aria-describedby="modalDescription" role="dialog">
+		<div class="modal-guts" role="document">
+			<p class="text-small text-center">Choose your role</p>
+			<p class="text-medium text-center text-bold">Who are you?</p>
+			<div class="choose-role">
+				<form action="" name="choose_role">
+					<label class="container">
+						<input type="radio" value="student" name="choose_role_radio" />
+
+						<span class="text">Student</span>
+						<span class="check"></span>
+					</label>
+					<label class="container">
+						<input type="radio" value="teacher" name="choose_role_radio" />
+
+						<span class="text">Teacher</span>
+						<span class="check"></span>
+					</label>
+				</form>
+			</div>
+			<button class="button accent_button button_upper" id="close-button">Lets start</button>
+		</div>
+	</div>
+
+	<script src="js/jsfile.js"></script>
+	<script>
+		Render();
+		isNew();
+		var a = Login();
+		ChooseRole(a);
+	</script>
+</body>
+</html>

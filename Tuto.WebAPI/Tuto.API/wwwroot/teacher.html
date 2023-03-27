@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Profile teacher</title>
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="font/stylesheet.css" />
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/css/selectize.default.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://kit.fontawesome.com/805074c2dd.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <script src="js/signalr/signalr.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/js/standalone/selectize.min.js"></script>
+    <div class="profile">
+       <div class="profile-left">
+        <a href="#" class="logo">
+            <h4>Tuto</h4>
+        </a>
+        <div class="profile-head">
+            <div class="img_profile_mini">
+                <img src="img/Profile.JPG" alt="" class="CurrentUser_Photo" />
+            </div>
+            <div class="">
+                <p class="text-nano CurrentUser_Role">Student</p>
+                <p class="text-small CurrentUser_Name">Katie Atakulova</p>
+            </div>
+        </div>
+        <div class="profile-link">
+            <a href="" id="my_profile_link">
+                <span class="icon-user"></span>
+                <span class="text-mini">My profile</span>
+            </a>
+            <a href="">
+                <span class="icon-calendar"></span>
+                <span class="text-mini">Schedule</span>
+            </a>
+        </div>
+        <div class="profile-bottom">
+            <a href="">
+                <label class="switch">
+                    <input type="checkbox" />
+                    <span class="slider round"></span>
+                </label>
+                <span class="text-mini">Telegram notifications</span>
+            </a>
+            <a href="">
+                <span class="icon-log-out"></span>
+                <span class="text-mini" onclick="Logout();">Log out</span>
+            </a>
+        </div>
+    </div>
+    <div class="profile-center center">
+        <div class="profile-center__block">
+            <div class="first-slide">
+                <div class="profile-head">
+                    <div class="img_profile_maxi">
+                        <img src="img/Profile.JPG" alt="" class="Teacher_photo" />
+                    </div>
+                    <div class="">
+                        <p class="text-small Teacher_Role">Teacher</p>
+                        <p class="text-medium Teacher_Name">Katie Atakulova</p>
+                        <p class="text-nano" id="subjectsProfile">English,Deutsch</p>
+                        <div id="location">
+                            <span class="location text-nano">Student`s home</span><span
+                            class="location text-nano">Another location</span>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="wrap">
+                    <div class="profile-main__flex">
+                        <div>
+                            <span class="icon-money"></span>
+                            <p class="text-nano">Minimal prise</p>
+                        </div>
+                        <div>
+                            <p class="text-nano">$</p>
+                            <p class="text-nano" id="price">30</p>
+                            <p class="text-nano">/ hour</p>
+                        </div>
+                    </div>
+                    <div class="profile-main__flex">
+                        <div>
+                            <span class="icon-city"></span>
+                            <p class="text-nano">City</p>
+                        </div>
+                        <div>
+                            <p class="text-nano" id="place">Kharkiv</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="wrap">
+                    <div class="profile-main__flex">
+                        <p class="text-mini passive" name="Monday">Mo</p>
+                        <p class="text-mini passive" name="Tuesday">Tu</p>
+                        <p class="text-mini passive" name="Wednesday">We</p>
+                        <p class="text-mini passive" name="Thursday">Th</p>
+                        <p class="text-mini passive" name="Friday">Fr</p>
+                        <p class="text-mini passive" name="Saturday">Sa</p>
+                        <p class="text-mini passive" name="Sunday">Su</p>
+                    </div>
+                </div>
+                <div class="wrap">
+                    <span class="icon-credit"></span>
+                    <p class="text-nano">Additional information</p>
+                    <div class="text-nano" id="additional_text">
+                        In the supplemented information, you can indicate the number of
+                        students with whom you want to study, features of the approach, as
+                        well as any information that you would like to convey to the
+                        student
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="second-slide" style="display: none;">
+                <div class="profile-head">
+                    <div class="img_profile_maxi">
+                        <img src="img/Profile.JPG" alt="" class="Teacher_photo" />
+                    </div>
+                    <div class="">
+                        <p class="text-small Teacher_Role">Teacher</p>
+                        <p class="text-medium">Katie Atakulova</p>
+                        <p class="text-nano">Average rating</p>
+                        <div>
+                            <div class="page__group">
+                                <div class="rating">
+                                    <input type="radio" name="rating-star" class="rating__control" id="rc1" checked>
+                                    <input type="radio" name="rating-star" class="rating__control" id="rc2">
+                                    <input type="radio" name="rating-star" class="rating__control" id="rc3">
+                                    <input type="radio" name="rating-star" class="rating__control" id="rc4">
+                                    <input type="radio" name="rating-star" class="rating__control" id="rc5">
+                                    <label for="rc1" class="rating__item">
+                                        <svg class="rating__star">
+                                            <use xlink:href="#star"></use>
+                                        </svg>
+                                        <span class="rating__label">1</span>
+                                    </label>
+                                    <label for="rc2" class="rating__item">
+                                        <svg class="rating__star">
+                                            <use xlink:href="#star"></use>
+                                        </svg>
+                                        <span class="rating__label">2</span>
+                                    </label>
+                                    <label for="rc3" class="rating__item">
+                                        <svg class="rating__star">
+                                            <use xlink:href="#star"></use>
+                                        </svg>
+                                        <span class="rating__label">3</span>
+                                    </label>
+                                    <label for="rc4" class="rating__item">
+                                        <svg class="rating__star">
+                                            <use xlink:href="#star"></use>
+                                        </svg>
+                                        <span class="rating__label">4</span>
+                                    </label>
+                                    <label for="rc5" class="rating__item">
+                                        <svg class="rating__star">
+                                            <use xlink:href="#star"></use>
+                                        </svg>
+                                        <span class="rating__label">5</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <svg style="display: none" width="20" height="19" viewBox="0 0 20 19" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path id="star"
+                            d="M10 0.809018L12.0074 6.98708L12.0635 7.15983H12.2451H18.7411L13.4858 10.9781L13.3388 11.0848L13.3949 11.2576L15.4023 17.4357L10.1469 13.6174L10 13.5106L9.85305 13.6174L4.59768 17.4357L6.60505 11.2576L6.66118 11.0848L6.51423 10.9781L1.25886 7.15983H7.75486H7.9365L7.99262 6.98708L10 0.809018Z" />
+                        </svg>
+
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="wrap">
+                <div class="review">
+                    <!-- <div class="profile-head"> -->
+                        <div class="img_profile_mini">
+                            <img src="img/Profile.JPG" alt="" class="" />
+                        </div>
+                        <div class="">
+                            <p class="text-nano Teacher_Role">Teacher</p>
+                            <p class="text-small">Katie Atakulova</p>
+                            <p class="text-nano comment-text">Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya
+                                top.Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya top.Govno! Vse
+                            </p>
+
+                        </div>
+                        <!-- </div> -->
+                    </div>
+
+                    <div class="review">
+                        <!-- <div class="profile-head"> -->
+                            <div class="img_profile_mini">
+                                <img src="img/Profile.JPG" alt="" class="" />
+                            </div>
+                            <div class="">
+                                <p class="text-nano Teacher_Role">Teacher</p>
+                                <p class="text-small">Katie Atakulova</p>
+                                <p class="text-nano comment-text">Govno! Vse ploho. Nastya top.Govno!
+                                </p>
+
+                            </div>
+                            <!-- </div> -->
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="wrap-profile">
+                    <label class="switch switch2">
+                        <input type="checkbox" id="profile-comment" />
+                        <span class="slider round2"></span>
+                    </label>
+
+                    <p class="leave-feedback">Leave feedback</p>
+
+                </div>
+
+            </div>
+        </div>
+
+<div class="profile-right profile-chat" style="display: block;">
+    <div class="fixed-close">
+        <span class="arrow-close icon-enlarge" id="fullsize_messages"></span>
+    </div>
+    <p class="text-medium chat-text text-bold">Chat</p>
+    <div class="input_container">
+        <i class="fas fa-search input-icon"></i>
+        <input type="text" placeholder="Search message" class="input-register" />
+    </div>
+
+    <div class="message-block">
+        <div class="message">
+            <div class="review">
+
+                <div class="img_profile_mini">
+                    <img src="img/Profile.JPG" alt="" class="" />
+                </div>
+                <div class="">
+                    <p class="text-small">Katie Atakulova</p>
+                    <p class="text-nano message-time">11:15
+                    </p>
+                    <p class="text-nano message-text">Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya
+                        top.Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya top.Govno! Vse
+                    </p>
+
+                </div>
+
+            </div>
+            <div class="review active">
+
+                <div class="img_profile_mini">
+                    <img src="img/Profile.JPG" alt="" class="" />
+                </div>
+                <div class="">
+                    <p class="text-small">Katie Atakulova</p>
+                    <p class="text-nano message-time">11:15
+                    </p>
+                    <p class="text-nano message-text">Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya
+                        top.Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya top.Govno! Vse
+                    </p>
+
+                </div>
+                <div class="count-message">1</div>
+
+
+            </div>
+            <div class="review">
+
+                <div class="img_profile_mini">
+                    <img src="img/Profile.JPG" alt="" class="" />
+                </div>
+                <div class="">
+                    <p class="text-small">Katie Atakulova</p>
+                    <p class="text-nano message-time">11:15
+                    </p>
+                    <p class="text-nano message-text">Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya
+                        top.Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya top.Govno! Vse
+                    </p>
+
+                </div>
+
+            </div>
+            <div class="review active">
+
+                <div class="img_profile_mini">
+                    <img src="img/Profile.JPG" alt="" class="" />
+                </div>
+                <div class="">
+                    <p class="text-small">Katie Atakulova</p>
+                    <p class="text-nano message-time">11:15
+                    </p>
+                    <p class="text-nano message-text">Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya
+                        top.Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya top.Govno! Vse
+                    </p>
+
+                </div>
+                <div class="count-message">1</div>
+
+
+            </div>
+            <div class="review">
+
+                <div class="img_profile_mini">
+                    <img src="img/Profile.JPG" alt="" class="" />
+                </div>
+                <div class="">
+                    <p class="text-small">Katie Atakulova</p>
+                    <p class="text-nano message-time">11:15
+                    </p>
+                    <p class="text-nano message-text">Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya
+                        top.Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya top.Govno! Vse
+                    </p>
+
+                </div>
+
+            </div>
+            <div class="review active">
+
+                <div class="img_profile_mini">
+                    <img src="img/Profile.JPG" alt="" class="" />
+                </div>
+                <div class="">
+                    <p class="text-small">Katie Atakulova</p>
+                    <p class="text-nano message-time">11:15
+                    </p>
+                    <p class="text-nano message-text">Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya
+                        top.Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya top.Govno! Vse
+                    </p>
+
+                </div>
+                <div class="count-message">1</div>
+
+
+            </div>
+            <div class="review">
+
+                <div class="img_profile_mini">
+                    <img src="img/Profile.JPG" alt="" class="" />
+                </div>
+                <div class="">
+                    <p class="text-small">Katie Atakulova</p>
+                    <p class="text-nano message-time">11:15
+                    </p>
+                    <p class="text-nano message-text">Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya
+                        top.Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya top.Govno! Vse
+                    </p>
+
+                </div>
+
+            </div>
+            <div class="review active">
+
+                <div class="img_profile_mini">
+                    <img src="img/Profile.JPG" alt="" class="" />
+                </div>
+                <div class="">
+                    <p class="text-small">Katie Atakulova</p>
+                    <p class="text-nano message-time">11:15
+                    </p>
+                    <p class="text-nano message-text">Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya
+                        top.Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya top.Govno! Vse
+                    </p>
+
+                </div>
+                <div class="count-message">1</div>
+
+
+            </div>
+
+            <div class="review">
+
+                <div class="img_profile_mini">
+                    <img src="img/Profile.JPG" alt="" class="" />
+                </div>
+                <div class="">
+                    <p class="text-small">Katie Atakulova</p>
+                    <p class="text-nano message-time">11:15
+                    </p>
+                    <p class="text-nano message-text">Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya
+                        top.Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya top.Govno! Vse
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="review">
+
+                <div class="img_profile_mini">
+                    <img src="img/Profile.JPG" alt="" class="" />
+                </div>
+                <div class="">
+                    <p class="text-small">Katie Atakulova</p>
+                    <p class="text-nano message-time">11:15 am
+                    </p>
+                    <p class="text-nano message-text">Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya
+                        top.Govno! Vse ploho. Nastya top.Govno! Vse ploho. Nastya top.Govno! Vse
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<div class="profile-right profile-chat-message" style="display: none;">
+    <div class="fixed-close">
+        <span class="arrow-close icon-arrow-back" id="back_to_messages"></span>
+        <span class="arrow-close icon-enlarge" id="fullsize_messages"></span>
+    </div>
+    <p class="text-medium chat-text text-bold">Message</p>
+    <div class="review">
+
+        <div class="img_profile_mini">
+            <img src="img/Profile.JPG" alt="" id="chatUserPhoto" />
+        </div>
+        <div class="">
+            <p class="text-nano" id="chatUserRole">Student</p>
+            <p class="text-small" id="chatUserName">Katie Atakulova</p>
+
+        </div>
+
+    </div>
+
+
+    <div class="chat">
+        <div class="messageInChat">
+            <div class="messageAll messageClient">
+                <p class="text-message"> Здравствуйте, Вероника. Когда будет готов наш заказ
+                </p>
+                <p class="message-time">11:15 am</p>
+            </div>
+        </div>
+        <div class="messageInChat">
+            <div class="messageAll messageClient">
+                <p class="text-message"> Здравствуйте, Вероника. Когда будет готов наш заказ
+                </p>
+                <p class="message-time">11:15 am</p>
+            </div>
+        </div>
+        <div class="messageInChat">
+            <div class="messageAll messageClient">
+                <p class="text-message"> Здравствуйте, Вероника. Когда будет готов наш заказ
+                </p>
+                <p class="message-time">11:15 am</p>
+            </div>
+        </div>
+        <div class="messageInChat">
+            <div class="messageAll messageManager">
+                <p class="text-message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quibusdam
+                    ullam illum hic consequuntur omnis qui dignissimos fuga! Possimus optio eveniet iusto illo,
+                    harum ex provident veritatis eos modi expedita.
+                </p>
+                <p class="message-time">11:15 am</p>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="sent-message">
+        <textarea class="send-text" placeholder="Message" name="" id="sendMessageInChat"></textarea>
+        <button onclick='sendMessage("#sendMessageInChat");' class="button accent_button button_upper" >Send message</button>
+    </div>
+</div>
+
+        <script src="js/jsfile.js"></script>
+        <script>
+            Render();
+            var a = Login();
+            viewTutor(a);
+        </script>
+    </body>
+
+    </html>
